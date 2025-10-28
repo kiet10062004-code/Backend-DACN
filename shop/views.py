@@ -10,23 +10,12 @@ from django.contrib.auth import authenticate, get_user_model
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.db.models import Q
-
-from .models import Product
-from .serializers import ProductSerializer
-from .models import (
-    Product, Category, User, Cart, Cart_Detail,
-    Order, Order_Detail, Payment, Revenue
-)
-from .serializers import (
-    ProductSerializer, CategorySerializer, UserSerializer,
-    CartSerializer, Cart_DetailSerializer, OrderSerializer,
-    Order_DetailSerializer, PaymentSerializer, RevenueSerializer
-)
+from .models import (Product, Category, User, Cart, Cart_Detail,Order, Order_Detail, Payment, Revenue)
+from .serializers import (ProductSerializer, CategorySerializer, UserSerializer,CartSerializer, Cart_DetailSerializer, OrderSerializer,Order_DetailSerializer, PaymentSerializer, RevenueSerializer)
 
 from rest_framework.decorators import action
 from rest_framework.response import Response

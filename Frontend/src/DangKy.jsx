@@ -71,7 +71,6 @@ function Dangky() {
   };
   // =========================================
 
-  // validate cơ bản
   const validateForm = () => {
     const { username, email, phone, first_name, last_name, password } = form;
     const errors = {};
@@ -102,7 +101,7 @@ function Dangky() {
           phone: form.phone
         }
       });
-      return res.data; // { username: true/false, email: true/false, phone: true/false }
+      return res.data;
     } catch (err) {
       console.error('Lỗi kiểm tra tồn tại:', err);
       return {};

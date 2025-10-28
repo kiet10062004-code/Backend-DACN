@@ -1,0 +1,442 @@
+{% load static %}
+{% load humanize %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'dashboard/style.css' %}">
+    <title>Responsive Dashboard Design #1 | AsmrProg</title>
+    <style>
+        /* Section hiển thị dữ liệu mới */
+        main section.custom-section { display: none; margin-bottom: 30px; }
+        main section.custom-section.active { display: block; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { text-align: left; padding: 10px; border-bottom: 1px solid #ddd; }
+        th { background-color: #f0f0f0; }
+        img.avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; }
+        a { color: #007bff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        body.dark-mode-variables {
+            background-color: #181a1e;
+            color: #f1f1f1;
+        }
+
+        /* bảng */
+        body.dark-mode-variables table {
+            background-color: #1e1f24;
+            color: #eaeaea;
+            border-color: #444;
+        }
+
+        /* tiêu đề bảng */
+        body.dark-mode-variables th {
+            background-color: #2c2e35 !important;
+            color: #fff !important;
+            border-bottom: 1px solid #444;
+        }
+
+        /* ô dữ liệu bảng */
+        body.dark-mode-variables td {
+            color: #e5e5e5 !important;
+            border-bottom: 1px solid #333;
+        }
+
+        /* link, tiêu đề, chữ */
+        body.dark-mode-variables h1,
+        body.dark-mode-variables h2,
+        body.dark-mode-variables h3,
+        body.dark-mode-variables p,
+        body.dark-mode-variables a {
+            color: #f0f0f0 !important;
+        }
+
+        body.dark-mode-variables a:hover {
+            color: #00b4d8 !important;
+        }
+
+        /* Sidebar màu tối hơn */
+        body.dark-mode-variables aside {
+            background-color: #1a1b20 !important;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- Sidebar Section -->
+        <aside>
+            <div class="toggle">
+                <div class="logo">
+                <img src="{% static 'dashboard/images/More len.png' %}" 
+                    style="width:50px; height:50px; object-fit:contain; ">
+                    <h2>More<span class="danger">Len</span></h2>
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-icons-sharp">close</span>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <!-- Menu mới -->
+                <a href="#" class="active" data-target="dashboard-section">
+                    <span class="material-icons-sharp">dashboard</span>
+                    <h3>Dashboard</h3>
+                </a>
+                <a href="#" data-target="users-section">
+                    <span class="material-icons-sharp">person_outline</span>
+                    <h3>Users</h3>
+                </a>
+                <a href="#" data-target="products-section">
+                    <span class="material-icons-sharp">inventory</span>
+                    <h3>Products</h3>
+                </a>
+                <a href="#" data-target="categories-section">
+                    <span class="material-icons-sharp">category</span>
+                    <h3>Categories</h3>
+                </a>
+                <a href="#" data-target="orders-section">
+                    <span class="material-icons-sharp">receipt_long</span>
+                    <h3>Orders</h3>
+                </a>
+                <a href="#" data-target="payments-section">
+                    <span class="material-icons-sharp">payment</span>
+                    <h3>Payments</h3>
+                </a>
+                <a href="#" data-target="revenues-section">
+                    <span class="material-icons-sharp">analytics</span>
+                    <h3>Revenues</h3>
+                </a>
+
+                <!-- Menu gốc giữ nguyên -->
+                <a href="#">
+                    <span class="material-icons-sharp">settings</span>
+                    <h3>Settings</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">add</span>
+                    <h3>New Login</h3>
+                </a>
+                <a href="http://localhost:5173/login">
+                    <span class="material-icons-sharp">logout</span>
+                    <h3>Logout</h3>
+                </a>
+            </div>
+        </aside>
+        <!-- End of Sidebar Section -->
+
+        <!-- Main Content -->
+        <main>
+            <!-- Dashboard gốc -->
+            <h1>Analytics</h1>
+            <div class="analyse">
+                <div class="sales">
+                    <div class="status">
+                        <div class="info">
+                            <h3>Total Sales</h3>
+                            <h1>{{ total_sales|intcomma }} VND</h1>
+                        </div>
+                        <div class="progresss">
+                            <svg>
+                                <circle cx="38" cy="38" r="36"></circle>
+                            </svg>
+                            <div class="percentage">
+                                <p>+81%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="visits">
+                    <div class="status">
+                        <div class="info">
+                            <h3>Site Visit</h3>
+                            <h1>24,981</h1>
+                        </div>
+                        <div class="progresss">
+                            <svg>
+                                <circle cx="38" cy="38" r="36"></circle>
+                            </svg>
+                            <div class="percentage">
+                                <p>-48%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="searches">
+                    <div class="status">
+                        <div class="info">
+                            <h3>Searches</h3>
+                            <h1>14,147</h1>
+                        </div>
+                        <div class="progresss">
+                            <svg>
+                                <circle cx="38" cy="38" r="36"></circle>
+                            </svg>
+                            <div class="percentage">
+                                <p>+21%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="new-users">
+                <h2>New Users</h2>
+                <div class="user-list">
+                    {% for user in new_users %}
+                        <div class="user">
+                            {% if user.avatar %}
+                                <img src="{{ user.avatar.url }}" alt="{{ user.username }}">
+                            {% else %}
+                                <img src="{% static 'dashboard/images/profile-1.jpg' %}" alt="default avatar">
+                            {% endif %}
+                            <h2>{{ user.username }}</h2>
+                            <p>{{ user.date_joined|timesince }} ago</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Recent Orders gốc -->
+            <div class="recent-orders">
+                <h2>Recent Orders</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Course Name</th>
+                            <th>Course Number</th>
+                            <th>Payment</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <a href="#">Show All</a>
+            </div>
+
+            <!-- Sections mới cho menu bổ sung -->
+            <section id="users-section" class="custom-section">
+                <h2>Users</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Avatar</th><th>Username</th><th>Email</th><th>Last name</th><th>First name</th><th>Phone</th><th>Joined</th><th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{% if user.avatar %}<img src="{{ user.avatar.url }}" class="avatar">{% else %}<img src="{% static 'dashboard/images/profile-1.jpg' %}" class="avatar">{% endif %}</td>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{user.last_name}}</td>
+                            <td>{{user.first_name}}</td>
+                            <td>{{ user.phone|default:"-" }}</td>
+                            <td>{{ user.date_joined|date:"Y-m-d H:i" }}</td>
+                            <td><a href="#">Edit</a> | <a href="#">Delete</a></td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="6">No users found</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="products-section" class="custom-section">
+                <h2>Products</h2>
+                <table>
+                    <thead>
+                        <tr><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                        <tr>
+                            <td>{% if product.image %}<img src="{{ product.image.url }}" class="avatar">{% else %}<img src="{% static 'dashboard/images/profile-1.jpg' %}" class="avatar">{% endif %}</td>
+                            <td>{{ product.name }}</td>
+                            <td>{% if product.category %}{{ product.category.name }}{% else %}-{% endif %}</td>
+                            <td>{{ product.price }}</td>
+                            <td>{{ product.stock }}</td>
+                            <td><a href="#">Edit</a> | <a href="#">Delete</a></td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="5">No products found</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="categories-section" class="custom-section">
+                <h2>Categories</h2>
+                <table>
+                    <thead>
+                        <tr><th>Name</th><th>Parent</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for category in categories %}
+                        <tr>
+                            <td>{{ category.name }}</td>
+                            <td>{% if category.parent %}{{ category.parent.name }}{% else %}-{% endif %}</td>
+                            <td><a href="#">Edit</a> | <a href="#">Delete</a></td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="3">No categories found</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="orders-section" class="custom-section">
+                <h2>Orders</h2>
+                <table>
+                    <thead>
+                        <tr><th>ID</th><th>User</th><th>Total</th><th>Status</th><th>Actions</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td>{{ order.id }}</td>
+                            <td>{{ order.user.username }}</td>
+                            <td>{{ order.total_price }}</td>
+                            <td>{{ order.status }}</td>
+                            <td><a href="#">View</a> | <a href="#">Cancel</a></td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="5">No orders found</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="payments-section" class="custom-section">
+                <h2>Payments</h2>
+                <table>
+                    <thead>
+                        <tr><th>Order ID</th><th>Method</th><th>Status</th><th>Amount</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for payment in payments %}
+                        <tr>
+                            <td>{{ payment.order.id }}</td>
+                            <td>{{ payment.payment_method }}</td>
+                            <td>{{ payment.payment_status }}</td>
+                            <td>{{ payment.amount }} VND</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="4">No payments found</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="revenues-section" class="custom-section">
+                <h2>Revenues</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rev in revenues %}
+                        <tr>
+                            <td>{{ rev.date|date:"Y-m-d" }}</td>
+                            <td>{{ rev.product.name }}</td>
+                            <td>{{ rev.quantity }}</td>
+                            <td>{{ rev.total }} VND</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="4">No revenues found</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+
+
+        </main>
+        <!-- End of Main Content -->
+
+        <!-- Right Section giữ nguyên -->
+        <div class="right-section">
+            <div class="nav">
+                <button id="menu-btn">
+                    <span class="material-icons-sharp">menu</span>
+                </button>
+                <div class="dark-mode">
+                    <span class="material-icons-sharp active">light_mode</span>
+                    <span class="material-icons-sharp">dark_mode</span>
+                </div>
+
+                <div class="profile">
+                    <div class="info">
+                        <p>Hey, <b>Reza</b></p>
+                        <small class="text-muted">Admin</small>
+                    </div>
+                    <div class="profile-photo">
+                        <img src="{% static 'dashboard/images/profile-1.jpg' %}">
+                    </div>
+                </div>
+            </div>
+
+            <div class="user-profile">
+                <div class="logo">
+                    <img src="{% static 'dashboard/images/logo.png' %}">
+                    <h2>AsmrProg</h2>
+                    <p>Fullstack Web Developer</p>
+                </div>
+            </div>
+
+            <div class="reminders">
+                <div class="header">
+                    <h2>Reminders</h2>
+                    <span class="material-icons-sharp">notifications_none</span>
+                </div>
+                <div class="notification">
+                    <div class="icon">
+                        <span class="material-icons-sharp">volume_up</span>
+                    </div>
+                    <div class="content">
+                        <div class="info">
+                            <h3>Workshop</h3>
+                            <small class="text_muted">08:00 AM - 12:00 PM</small>
+                        </div>
+                        <span class="material-icons-sharp">more_vert</span>
+                    </div>
+                </div>
+                <div class="notification deactive">
+                    <div class="icon">
+                        <span class="material-icons-sharp">edit</span>
+                    </div>
+                    <div class="content">
+                        <div class="info">
+                            <h3>Workshop</h3>
+                            <small class="text_muted">08:00 AM - 12:00 PM</small>
+                        </div>
+                        <span class="material-icons-sharp">more_vert</span>
+                    </div>
+                </div>
+                <div class="notification add-reminder">
+                    <div>
+                        <span class="material-icons-sharp">add</span>
+                        <h3>Add Reminder</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Right Section -->
+    </div>
+
+
+
+    <script src="{% static 'dashboard/index.js' %}"></script>
+</body>
+
+</html>

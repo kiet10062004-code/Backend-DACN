@@ -7,8 +7,8 @@ function Products() {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [activeParent, setActiveParent] = useState(null);
+  const [loading, setLoading] = useState(true); // ✅ chỉ thêm state này
 
-  // Lấy danh mục
   useEffect(() => {
     axios.get('http://127.0.0.1:8000/api/Category/')
       .then(res => {
@@ -22,19 +22,19 @@ function Products() {
       .catch(err => console.error('Lỗi khi lấy danh mục', err));
   }, []);
 
-  // Lấy sản phẩm theo danh mục
   useEffect(() => {
     if (selectedCategory === null) return;
+    setLoading(true); // ✅ bật loading khi bắt đầu gọi API
     const url = `http://127.0.0.1:8000/api/Product/?category=${selectedCategory}&include_children=true`;
     axios.get(url)
       .then(res => {
         const data = Array.isArray(res.data) ? res.data : res.data.results || [];
         setProducts(data);
       })
-      .catch(err => console.error('Lỗi khi lấy sản phẩm', err));
+      .catch(err => console.error('Lỗi khi lấy sản phẩm', err))
+      .finally(() => setLoading(false)); // ✅ tắt loading khi xong
   }, [selectedCategory]);
 
-  // Phân loại danh mục cha/con
   const parentCategories = categories.filter(c => c.parent === null || c.parent === undefined);
   const childCategories = categories.filter(c => {
     if (typeof c.parent === 'object') {
@@ -43,7 +43,6 @@ function Products() {
     return c.parent === activeParent;
   });
 
-  // Thêm vào giỏ hàng
   const addToCart = (product) => {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const existing = cart.find(item => item.id === product.id);
@@ -56,10 +55,25 @@ function Products() {
     alert(`Đã thêm "${product.name}" vào giỏ hàng!`);
   };
 
+  // ✅ Skeleton loader cho sản phẩm
+  const ProductSkeleton = () => (
+    <li style={{
+      border: '1px solid #eee',
+      padding: '12px',
+      borderRadius: '8px',
+      background: '#fff',
+      animation: 'pulse 1.5s infinite ease-in-out'
+    }}>
+      <div style={{ background: '#e5e7eb', height: '160px', borderRadius: '6px', marginBottom: '10px' }} />
+      <div style={{ background: '#e5e7eb', height: '16px', width: '80%', borderRadius: '4px', marginBottom: '8px' }} />
+      <div style={{ background: '#e5e7eb', height: '16px', width: '60%', borderRadius: '4px' }} />
+    </li>
+  );
+
   return (
     <div style={{ display: 'flex', minHeight: '100vh' }}>
       {/* Sidebar danh mục */}
-      <aside style={{ width: '220px', padding: '20px', borderRight: '1px solid #ddd' }}>
+      <aside style={{ width: '220px', padding: '5px', borderRight: '1px solid #ddd' }}>
         <h3>Danh mục sản phẩm</h3>
         <ul style={{ listStyle: 'none', padding: 0 }}>
           {parentCategories.map(category => (
@@ -116,13 +130,15 @@ function Products() {
         {/* Danh sách sản phẩm */}
         <ul style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
           gap: '24px',
           listStyle: 'none',
           padding: 0
         }}>
-          {products.length === 0 ? (
-            <p>Không có sản phẩm nào trong danh mục này.</p>
+          {loading ? (
+            Array.from({ length: 8 }).map((_, i) => <ProductSkeleton key={i} />)
+          ) : products.length === 0 ? (
+            <p>Không có sản phẩm nào.</p>
           ) : (
             products.map(product => (
               <li key={product.id} style={{
@@ -138,7 +154,7 @@ function Products() {
                     alt={product.name}
                     style={{
                       width: '100%',
-                      height: '160px',
+                      height: '190px',
                       objectFit: 'cover',
                       borderRadius: '6px',
                       marginBottom: '10px'
@@ -150,7 +166,7 @@ function Products() {
                 </Link>
 
                 <p style={{ fontWeight: 'bold', color: '#d0021b' }}>
-                  {product.price?.toLocaleString()} VND
+                <span>{Number(product.price).toLocaleString('vi-VN')} VND</span>
                 </p>
 
                 <button
@@ -173,6 +189,16 @@ function Products() {
           )}
         </ul>
       </main>
+
+      <style>
+        {`
+          @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+          }
+        `}
+      </style>
     </div>
   );
 }

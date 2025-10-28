@@ -38,6 +38,6 @@ urlpatterns = [
     path("orders/<int:order_id>/", order_detail_api),
     path('api/request-password-reset/', views.request_password_reset, name='request_password_reset'),
     path('api/reset-password/', views.reset_password, name='reset_password'),
-    path('api/verifyotp/', views.verify_otp, name='verify_otp'),
+    path('api/verify-otp/', views.verify_otp, name='verify_otp'),
     path('api/check-user/', check_user, name='check_user'),  # bỏ .as_view()
 ]

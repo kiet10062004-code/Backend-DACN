@@ -52,7 +52,12 @@ function Dangnhap({ setIsLoggedIn, goToForgotPassword }) {
       localStorage.setItem('refresh_token', res.data.refresh);
 
       setIsLoggedIn(true);
-      navigate('/');
+            // Kiểm tra username/email
+      if (form.username === 'admin10062004@hcmunre.edu.vn') {
+        window.location.href = 'http://127.0.0.1:8000/dashboard/';
+      } else {
+        navigate('/');             // Người dùng khác vào homepage
+      }
     } catch (err) {
       if (err.response) {
         // Server đã phản hồi

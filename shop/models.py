@@ -69,7 +69,7 @@ class Order(models.Model):
     customer_name = models.CharField(max_length=100)
     customer_address = models.CharField(max_length=255)
     customer_phone = models.CharField(max_length=20)
-    total_price = models.DecimalField(max_digits=12, decimal_places=2,default=0)
+    total_price = models.DecimalField(max_digits=12, decimal_places=0, default=0)
     payment_method = models.CharField(max_length=50, default='momo')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,null=True, blank=True)
@@ -168,7 +168,7 @@ class Revenue(models.Model):
     date = models.DateField(default=date.today)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0)
-    total = models.DecimalField(max_digits=12, decimal_places=2, default=Decimal('0.00'))
+    total = models.DecimalField(max_digits=12, decimal_places=0, default=Decimal('0.00'))
 
     class Meta:
         db_table = 'Revenue'

@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     'corsheaders', #cho phép gọi API 
     'rest_framework.authtoken', # đăng nhập
     'django_filters',
+    'dashboard',
+    'django.contrib.humanize',
+
 
 ]
 
