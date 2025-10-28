@@ -32,7 +32,6 @@ export default function Profile({ setAvatarUrl, setFullName }) {
     fetchProfile();
   }, []);
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
@@ -79,53 +78,94 @@ export default function Profile({ setAvatarUrl, setFullName }) {
 
   if (loading)
     return (
-      <div style={{ padding: 20 }}>
-        <div style={{ width: 80, height: 80, borderRadius: "50%", background: "#eee", marginBottom: 10 }} />
-        <div style={{ width: "100%", height: 15, background: "#eee", marginBottom: 5 }} />
-        <div style={{ width: "80%", height: 15, background: "#eee" }} />
+      <div
+        style={{
+          padding: 20,
+          height: "100vh",
+          width: "100vw",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <div style={{ width: 80, height: 80, borderRadius: "50%", background: "#eee" }} />
       </div>
     );
 
   return (
-    <div style={{ padding: "20px", maxWidth: "400px" }}>
-      <h1>Thông tin cá nhân</h1>
+    <div
+      style={{
+        width: "400px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        border: "1px solid #ddd",
+        backgroundColor: "white",
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        borderRadius: "12px",
+        padding: "30px",
+        boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+      }}
+    >
       {message && (
-        <p style={{ color: message.includes("thành công") ? "green" : "red" }}>{message}</p>
+        <p style={{ color: message.includes("thành công") ? "green" : "red", marginBottom: 10 }}>
+          {message}
+        </p>
       )}
 
-      <form onSubmit={handleSubmit}>
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
         <img
           src={preview || profile.avatar || "/media/avatars/default.jpg"}
           width={120}
-          style={{ borderRadius: "50%", marginBottom: 10 }}
+          height={120}
+          style={{ borderRadius: "50%", marginBottom: 15, objectFit: "cover" }}
           alt="avatar"
         />
 
-        <input type="file" onChange={(e) => onAvatarSelect(e.target.files[0])} />
+        <input
+          type="file"
+          onChange={(e) => onAvatarSelect(e.target.files[0])}
+          style={{ marginBottom: 15 }}
+        />
 
         <input
-          style={{ display: "block", marginTop: 10 }}
+          style={inputStyle}
           name="first_name"
+          placeholder="Họ"
           value={profile.first_name || ""}
           onChange={(e) => setProfile({ ...profile, first_name: e.target.value })}
         />
 
         <input
-          style={{ display: "block", marginTop: 10 }}
+          style={inputStyle}
           name="last_name"
+          placeholder="Tên"
           value={profile.last_name || ""}
           onChange={(e) => setProfile({ ...profile, last_name: e.target.value })}
         />
 
         <input
-          style={{ display: "block", marginTop: 10 }}
+          style={inputStyle}
           name="phone"
+          placeholder="Số điện thoại"
           value={profile.phone || ""}
           onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
         />
 
         <input
-          style={{ display: "block", marginTop: 10 }}
+          style={{ ...inputStyle, background: "#f5f5f5", cursor: "not-allowed" }}
           disabled
           value={maskEmail(profile.email)}
         />
@@ -133,7 +173,18 @@ export default function Profile({ setAvatarUrl, setFullName }) {
         <button
           type="submit"
           disabled={saving}
-          style={{ marginTop: 15, padding: "8px 12px", cursor: saving ? "not-allowed" : "pointer" }}
+          style={{
+            marginTop: 20,
+            padding: "10px 20px",
+            backgroundColor: saving ? "#ccc" : "#007bff",
+            color: "white",
+            border: "none",
+            borderRadius: "6px",
+            cursor: saving ? "not-allowed" : "pointer",
+            width: "110%",
+            fontSize: "16px",
+            transition: "0.3s",
+          }}
         >
           {saving ? "Đang lưu..." : "Lưu thay đổi"}
         </button>
@@ -141,3 +192,12 @@ export default function Profile({ setAvatarUrl, setFullName }) {
     </div>
   );
 }
+
+const inputStyle = {
+  width: "100%",
+  padding: "10px",
+  marginTop: "10px",
+  borderRadius: "6px",
+  border: "1px solid #ccc",
+  fontSize: "15px",
+};
