@@ -74,7 +74,8 @@ function Products() {
     <div style={{ display: 'flex', minHeight: '100vh' }}>
       {/* Sidebar danh mục */}
       <aside style={{ width: '220px', padding: '5px', borderRight: '1px solid #ddd' }}>
-        <h3>Danh mục sản phẩm</h3>
+        <div>
+          <h3 style={{background: '#DEC6C6', height:'30px',alignItems:"center",alignContent: "center", display: "flex", justifyContent:"center"}}>Danh mục sản phẩm</h3>
         <ul style={{ listStyle: 'none', padding: 0 }}>
           {parentCategories.map(category => (
             <li key={category.id}>
@@ -99,6 +100,8 @@ function Products() {
             </li>
           ))}
         </ul>
+        </div>
+        
       </aside>
 
       {/* Main */}
@@ -175,7 +178,7 @@ function Products() {
                     marginTop: '10px',
                     padding: '8px 12px',
                     background: 'grey',
-                    color: '#fff',
+                    color: 'white',
                     border: 'none',
                     borderRadius: '4px',
                     cursor: 'pointer',

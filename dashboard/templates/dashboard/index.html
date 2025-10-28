@@ -252,7 +252,7 @@
                 <h2>Products</h2>
                 <table>
                     <thead>
-                        <tr><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Actions</th></tr>
+                        <tr><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Sold</th><th>Actions</th></tr>
                     </thead>
                     <tbody>
                         {% for product in products %}
@@ -262,6 +262,7 @@
                             <td>{% if product.category %}{{ product.category.name }}{% else %}-{% endif %}</td>
                             <td>{{ product.price }}</td>
                             <td>{{ product.stock }}</td>
+                            <td>{{ product.sold }}</td>
                             <td><a href="#">Edit</a> | <a href="#">Delete</a></td>
                         </tr>
                         {% empty %}

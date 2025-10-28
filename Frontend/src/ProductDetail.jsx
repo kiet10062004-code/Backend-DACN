@@ -54,15 +54,69 @@ export default function ProductDetail() {
         <div style={{ maxWidth: "600px" }}>
           <h1>{product.name}</h1>
           <p style={{ fontWeight: "bold", color: "#d0021b", fontSize: "1.2rem" }}>
-            {product.price?.toLocaleString()} VND
+              <span>{Number(product.price).toLocaleString('vi-VN')} VND</span>
           </p>
           <p>{product.description}</p>
 
-          {/* Chỉnh số lượng */}
-          <div style={{ display: "flex", alignItems: "center", margin: "20px 0" }}>
-            <button onClick={() => setQuantity(q => Math.max(1, q - 1))} style={{ padding: "6px 12px", fontSize: "16px" }}>-</button>
-            <span style={{ margin: "0 12px", fontSize: "16px" }}>{quantity}</span>
-            <button onClick={() => setQuantity(q => q + 1)} style={{ padding: "6px 12px", fontSize: "16px" }}>+</button>
+            {/* Chỉnh số lượng */}
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <button
+              onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
+              style={{
+                width: "32px",
+                height: "32px",
+                borderRadius: "6px",
+                border: "none",
+                backgroundColor: "#eee",
+                cursor: "pointer",
+                fontSize: "18px"
+              }}
+            >
+              −
+            </button>
+
+            <input
+              type="number"
+              min="1"
+              max={product.stock} // ✅ Giới hạn theo tồn kho
+              value={quantity}
+              onChange={(e) => {
+                const val = Number(e.target.value);
+                if (val >= 1 && val <= product.stock) {
+                  setQuantity(val);
+                } else if (val > product.stock) {
+                  setQuantity(product.stock);
+                } else {
+                  setQuantity(1);
+                }
+              }}
+              style={{
+                width: "50px",
+                textAlign: "center",
+                fontSize: "16px",
+                padding: "6px",
+                borderRadius: "6px",
+                border: "1px solid #ccc",
+                alignItems: "center",
+                display: "flex",
+                justifyContent: "center"
+              }}
+            />
+
+            <button
+              onClick={() => setQuantity(prev => Math.min(product.stock, prev + 1))}
+              style={{
+                width: "32px",
+                height: "32px",
+                borderRadius: "6px",
+                border: "none",
+                backgroundColor: "#eee",
+                cursor: "pointer",
+                fontSize: "18px"
+              }}
+            >
+              +
+            </button>
           </div>
 
           <button
@@ -74,6 +128,7 @@ export default function ProductDetail() {
               border: "none",
               borderRadius: "4px",
               cursor: "pointer",
+              marginTop: "20px"
             }}
           >
             Thêm vào giỏ hàng
@@ -85,14 +140,14 @@ export default function ProductDetail() {
       {relatedProducts.length > 0 && (
         <div style={{ marginTop: "50px" }}>
           <h2>Sản phẩm liên quan</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: "20px", marginTop: "20px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(190px, 1fr))", gap: "20px", marginTop: "20px" }}>
             {relatedProducts.map(p => (
-              <div key={p.id} style={{ border: "1px solid #ddd", padding: "10px", borderRadius: "6px", textAlign: "center" }}>
+              <div key={p.id} style={{ border: "1px solid black", padding: "10px", borderRadius: "6px", textAlign: "center",backgroundColor:'white' }}>
                 <Link to={`/product/${p.id}`} style={{ textDecoration: "none", color: "inherit" }}>
                   <img src={p.image} alt={p.name} style={{ width: "100%", height: "140px", objectFit: "cover", borderRadius: "4px" }} />
                   <h4 style={{ fontSize: "0.9rem", margin: "10px 0 5px 0" ,textDecoration : "none" }}>{p.name}</h4>
                 </Link>
-                <p style={{ color: "#d0021b", fontWeight: "bold" }}>{p.price?.toLocaleString()} VND</p>
+                <p style={{ color: "#d0021b", fontWeight: "bold" }}><span>{Number(product.price).toLocaleString('vi-VN')} VND</span></p>
                 <button
                   onClick={() => {
                     const cart = JSON.parse(localStorage.getItem("cart")) || [];

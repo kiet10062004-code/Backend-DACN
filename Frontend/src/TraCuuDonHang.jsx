@@ -82,8 +82,9 @@ function TraCuuDonHang() {
             <td style={{ padding: '10px' }}>#{order.id}</td>
             <td style={{ padding: '10px' }}>{order.status_display}</td>
             <td style={{ padding: '10px' }}>{new Date(order.created_at).toLocaleString()}</td>
-            <td style={{ padding: '10px' }}>{order.total_price.toLocaleString()} VND</td>
-          </tr>
+            <td style={{ padding: '10px' }}> <span>{Number(order.total_price).toLocaleString('vi-VN')} VND</span></td>
+          </tr>               
+
         ))}
       </tbody>
     </table>
