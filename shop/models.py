@@ -55,7 +55,14 @@ class Product(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.get_status_display()})"
-
+    def save(self, *args, **kwargs):
+            # Nếu stock = 0 thì set status = OUT_OF_STOCK
+        if self.stock <= 0 and self.status != self.Status.OUT_OF_STOCK:
+            self.status = self.Status.OUT_OF_STOCK
+        # Nếu stock > 0 và đang là OUT_OF_STOCK thì đổi lại ACTIVE
+        elif self.stock > 0 and self.status == self.Status.OUT_OF_STOCK:
+            self.status = self.Status.ACTIVE
+        super().save(*args, **kwargs)   
 
 
 class Order(models.Model):
@@ -169,7 +176,7 @@ class Revenue(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0)
     total = models.DecimalField(max_digits=12, decimal_places=0, default=Decimal('0.00'))
-
+    
     class Meta:
         db_table = 'Revenue'
         constraints = [
@@ -181,22 +188,31 @@ class Revenue(models.Model):
 
     @classmethod
     def update_revenue(cls, order):
-        """Cập nhật doanh thu sau khi đơn hàng thanh toán thành công"""
         with transaction.atomic():
             for item in order.order_details.select_related('product'):
+                # Khóa sản phẩm trong DB để tránh oversell
+                product = Product.objects.select_for_update().get(pk=item.product.pk)
+
+                # Nếu tồn kho không đủ thì báo lỗi (hoặc rollback)
+                if product.stock < item.quantity:
+                    raise ValueError(f"Sản phẩm {product.name} đã hết hàng")
+
+                # Cập nhật doanh thu
                 obj, _ = cls.objects.get_or_create(
                     date=date.today(),
-                    product=item.product,
+                    product=product,
                     defaults={'quantity': 0, 'total': Decimal('0.00')}
                 )
                 cls.objects.filter(pk=obj.pk).update(
                     quantity=F('quantity') + item.quantity,
                     total=F('total') + (item.price * item.quantity)
                 )
-                Product.objects.filter(pk=item.product.pk).update(
-                    sold=F('sold') + item.quantity,
-                    stock=F('stock') - item.quantity
-                )
+
+                # Trừ kho thật
+                product.stock = F('stock') - item.quantity
+                product.sold = F('sold') + item.quantity
+                product.save()
+
 
 
 from django.db import models

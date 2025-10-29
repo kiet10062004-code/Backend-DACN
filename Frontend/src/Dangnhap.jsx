@@ -35,47 +35,57 @@ function Dangnhap({ setIsLoggedIn, goToForgotPassword }) {
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) return;
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (!validateForm()) return;
 
-    setLoading(true);
-    setFieldErrors({});
-    try {
-      const payload = {
-        username: form.username, // username hoặc email tùy backend xử lý
-        password: form.password
-      };
-      const res = await axios.post('http://127.0.0.1:8000/api/token/', payload);
+  setLoading(true);
+  setFieldErrors({});
+  try {
+    const payload = {
+      username: form.username,
+      password: form.password
+    };
+    const res = await axios.post('http://127.0.0.1:8000/api/token/', payload);
 
-      localStorage.setItem('access_token', res.data.access);
-      localStorage.setItem('refresh_token', res.data.refresh);
+    const access = res.data.access;
+    const refresh = res.data.refresh;
 
-      setIsLoggedIn(true);
-            // Kiểm tra username/email
-      if (form.username === 'admin10062004@hcmunre.edu.vn') {
-        window.location.href = 'http://127.0.0.1:8000/dashboard/';
-      } else {
-        navigate('/');             // Người dùng khác vào homepage
-      }
-    } catch (err) {
-      if (err.response) {
-        // Server đã phản hồi
-        if (err.response.status === 401 || err.response.status === 400) {
-          setFieldErrors({ password: 'Tên đăng nhập hoặc mật khẩu không đúng' });
-        } else {
-          setFieldErrors({ password: `Lỗi từ server: ${err.response.status}` });
-        }
-      } else if (err.request) {
-        // Không nhận được phản hồi
-        setFieldErrors({ username: 'Không thể kết nối tới server. Vui lòng thử lại sau.' });
-      } else {
-        setFieldErrors({ username: 'Có lỗi xảy ra. Vui lòng thử lại.' });
-      }
-    } finally {
-      setLoading(false);
+    localStorage.setItem('access_token', access);
+    localStorage.setItem('refresh_token', refresh);
+
+    // 🔹 Gọi API user info để kiểm tra superuser
+    const userRes = await axios.get('http://127.0.0.1:8000/api/user/', {
+      headers: { Authorization: `Bearer ${access}` }
+    });
+
+    const user = userRes.data;
+    setIsLoggedIn(true);
+
+    // 🔹 Nếu là superuser → vào dashboard
+    if (user.is_superuser) {
+      window.location.href = 'http://127.0.0.1:8000/dashboard/';
+    } else {
+      navigate('/'); // Người dùng thường → homepage
     }
-  };
+
+  } catch (err) {
+    if (err.response) {
+      if (err.response.status === 401 || err.response.status === 400) {
+        setFieldErrors({ password: 'Tên đăng nhập hoặc mật khẩu không đúng' });
+      } else {
+        setFieldErrors({ password: `Lỗi từ server: ${err.response.status}` });
+      }
+    } else if (err.request) {
+      setFieldErrors({ username: 'Không thể kết nối tới server. Vui lòng thử lại sau.' });
+    } else {
+      setFieldErrors({ username: 'Có lỗi xảy ra. Vui lòng thử lại.' });
+    }
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <form onSubmit={handleSubmit} style={containerStyle}>
@@ -100,14 +110,14 @@ function Dangnhap({ setIsLoggedIn, goToForgotPassword }) {
       ))}
 
       <button type="submit" style={buttonStyle} disabled={loading}
-          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#45a049")}
+          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#4A1C48")}
           onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#2196F3")}
       >
         {loading ? 'Đang xử lý...' : 'Đăng nhập'}
       </button>
 
       <div style={forgotStyle} onClick={goToForgotPassword}>Quên mật khẩu?</div>
-        <div style={{ color: '#2196F3', cursor: 'pointer', fontSize: '0.9em' }} onClick={() => navigate("/register")}>Đăng ký tài khoản</div>
+        <div style={{ color: '#2196F3', cursor: 'pointer', fontSize: '0.9em' ,paddingTop:"10px"}} onClick={() => navigate("/register")}>Đăng ký tài khoản</div>
     </form>
   );
 }

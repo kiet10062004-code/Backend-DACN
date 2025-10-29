@@ -7,7 +7,7 @@ function Products() {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [activeParent, setActiveParent] = useState(null);
-  const [loading, setLoading] = useState(true); // ✅ chỉ thêm state này
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios.get('http://127.0.0.1:8000/api/Category/')
@@ -24,7 +24,7 @@ function Products() {
 
   useEffect(() => {
     if (selectedCategory === null) return;
-    setLoading(true); // ✅ bật loading khi bắt đầu gọi API
+    setLoading(true);
     const url = `http://127.0.0.1:8000/api/Product/?category=${selectedCategory}&include_children=true`;
     axios.get(url)
       .then(res => {
@@ -32,7 +32,7 @@ function Products() {
         setProducts(data);
       })
       .catch(err => console.error('Lỗi khi lấy sản phẩm', err))
-      .finally(() => setLoading(false)); // ✅ tắt loading khi xong
+      .finally(() => setLoading(false));
   }, [selectedCategory]);
 
   const parentCategories = categories.filter(c => c.parent === null || c.parent === undefined);
@@ -43,9 +43,18 @@ function Products() {
     return c.parent === activeParent;
   });
 
+  // ✅ Chỉ sửa chỗ này: check stock trước khi add
   const addToCart = (product) => {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const existing = cart.find(item => item.id === product.id);
+    const totalQuantity = existing ? existing.quantity + 1 : 1;
+
+    // Check stock
+    if (totalQuantity > product.stock) {
+      alert(`Chỉ còn ${product.stock} sản phẩm trong kho!`);
+      return;
+    }
+
     if (existing) {
       existing.quantity += 1;
     } else {
@@ -55,7 +64,7 @@ function Products() {
     alert(`Đã thêm "${product.name}" vào giỏ hàng!`);
   };
 
-  // ✅ Skeleton loader cho sản phẩm
+  // Skeleton loader
   const ProductSkeleton = () => (
     <li style={{
       border: '1px solid #eee',
@@ -76,32 +85,31 @@ function Products() {
       <aside style={{ width: '220px', padding: '5px', borderRight: '1px solid #ddd' }}>
         <div>
           <h3 style={{background: '#DEC6C6', height:'30px',alignItems:"center",alignContent: "center", display: "flex", justifyContent:"center"}}>Danh mục sản phẩm</h3>
-        <ul style={{ listStyle: 'none', padding: 0 }}>
-          {parentCategories.map(category => (
-            <li key={category.id}>
-              <button
-                onClick={() => {
-                  setActiveParent(category.id);
-                  setSelectedCategory(category.id);
-                }}
-                style={{
-                  background: activeParent === category.id ? '#e6f0ff' : 'transparent',
-                  border: 'none',
-                  padding: '10px',
-                  cursor: 'pointer',
-                  width: '100%',
-                  fontWeight: activeParent === category.id ? 'bold' : 'normal',
-                  borderRadius: '4px',
-                  textAlign: 'left'
-                }}
-              >
-                {category.name}
-              </button>
-            </li>
-          ))}
-        </ul>
+          <ul style={{ listStyle: 'none', padding: 0 }}>
+            {parentCategories.map(category => (
+              <li key={category.id}>
+                <button
+                  onClick={() => {
+                    setActiveParent(category.id);
+                    setSelectedCategory(category.id);
+                  }}
+                  style={{
+                    background: activeParent === category.id ? '#e6f0ff' : 'transparent',
+                    border: 'none',
+                    padding: '10px',
+                    cursor: 'pointer',
+                    width: '100%',
+                    fontWeight: activeParent === category.id ? 'bold' : 'normal',
+                    borderRadius: '4px',
+                    textAlign: 'left'
+                  }}
+                >
+                  {category.name}
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
-        
       </aside>
 
       {/* Main */}
@@ -169,7 +177,7 @@ function Products() {
                 </Link>
 
                 <p style={{ fontWeight: 'bold', color: '#d0021b' }}>
-                <span>{Number(product.price).toLocaleString('vi-VN')} VND</span>
+                  <span>{Number(product.price).toLocaleString('vi-VN')} VND</span>
                 </p>
 
                 <button

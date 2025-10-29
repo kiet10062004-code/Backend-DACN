@@ -1,0 +1,11 @@
+{% extends "dashboard/base.html" %}
+{% block content %}
+<h2>{% if form.instance.pk %}Edit Product{% else %}Add Product{% endif %}</h2>
+
+<form method="POST" enctype="multipart/form-data" style="max-width:600px;margin:auto">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" style="background:#4CAF50;color:white;padding:8px 16px;border:none;border-radius:5px">Save</button>
+  <a href="{% url 'dashboard_home' %}" style="margin-left:10px;">Cancel</a>
+</form>
+{% endblock %}

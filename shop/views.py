@@ -323,7 +323,7 @@ def momo_ipn_callback(request):
     except Payment.DoesNotExist:
         return JsonResponse({"error": "Không tìm thấy Payment tương ứng"}, status=404)
     except Exception as e:
-        print("⚠️ Lỗi IPN:", e)
+        print(" Lỗi IPN:", e)
         return JsonResponse({"error": str(e)}, status=400)
 
 
@@ -557,22 +557,18 @@ def verify_otp(request):
     except User.DoesNotExist:
         return Response({"error": "Người dùng không tồn tại"}, status=404)
 
-    # Lấy tất cả OTP chưa hết hạn
     now = timezone.now()
     valid_otps = PasswordResetOTP.objects.filter(user=user, expires_at__gt=now).order_by('-expires_at')
 
     if not valid_otps.exists():
         return Response({"error": "Không có OTP hợp lệ hoặc đã hết hạn"}, status=400)
 
-    # Giữ OTP mới nhất, xóa các mã cũ
     latest_otp = valid_otps.first()
     if latest_otp.otp != otp:
         return Response({"error": "OTP không hợp lệ hoặc đã hết hạn"}, status=400)
 
-    # Xóa các OTP cũ, giữ OTP vừa xác thực
     valid_otps.exclude(id=latest_otp.id).delete()
 
-    # Nếu muốn, bạn cũng có thể đánh dấu OTP này đã dùng
     latest_otp.used = True
     latest_otp.save()
 
@@ -603,3 +599,16 @@ def check_user(request):
 
 
 
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_info(request):
+    user = request.user
+    return Response({
+        "username": user.username,
+        "email": user.email,
+        "is_superuser": user.is_superuser,
+    })

@@ -6,10 +6,10 @@
     --color-success: #1B9C85;
     --color-warning: #F7D060;
     --color-white: #fff;
-    --color-info-dark: #7d8da1;
-    --color-dark: #363949;
+    --color-info-dark: #000000;
+    --color-dark: #000000;
     --color-light: rgba(132, 139, 200, 0.18);
-    --color-dark-variant: #677483;
+    --color-dark-variant: #000000;
     --color-background: #f6f6f9;
 
     --card-border-radius: 2rem;
@@ -26,7 +26,7 @@
     --color-background: #181a1e;
     --color-white: #202528;
     --color-dark: #edeffd;
-    --color-dark-variant: #a3bdcc;
+    --color-dark-variant: #000000;
     --color-light: rgba(0, 0, 0, 0.4);
     --box-shadow: 0 2rem 3rem var(--color-light);
 }
@@ -747,4 +747,19 @@ body.dark-mode-variables a:hover {
 body.dark-mode-variables .new-users h2,
 body.dark-mode-variables .recent-orders h2 {
     color: #fff;
+}
+body:not(.dark-mode-variables) {
+    color: #000 !important;
+}
+
+body:not(.dark-mode-variables) p,
+body:not(.dark-mode-variables) td,
+body:not(.dark-mode-variables) a,
+body:not(.dark-mode-variables) small,
+body:not(.dark-mode-variables) h1,
+body:not(.dark-mode-variables) h2,
+body:not(.dark-mode-variables) h3,
+body:not(.dark-mode-variables) b,
+body:not(.dark-mode-variables) span {
+    color: #000 !important;
 }

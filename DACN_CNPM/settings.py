@@ -153,7 +153,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
-AUTH_USER_MODEL = 'shop.User' # Kế thừa class User mặc định của Django
+AUTH_USER_MODEL = 'shop.User' 
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",

@@ -24,7 +24,8 @@ function Dangky() {
     border: '1px solid #eee',
     borderRadius: '8px',
     boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-    fontFamily: 'Arial, sans-serif'
+    fontFamily: 'Arial, sans-serif',
+    backgroundColor:'white'
   };
 
   const inputContainerStyle = { 
@@ -166,11 +167,13 @@ function Dangky() {
       ))}
 
       <button type="submit" style={buttonStyle} disabled={loading}
-          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#45a049")}
+          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#4A1C48")}
           onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#2196F3")}
       >
         {loading ? 'Đang xử lý...' : 'Đăng ký'}
       </button>
+      <div style={{cursor: 'pointer', color:'#2196F3', paddingTop: '10px'}} onClick={() => navigate("/login")}>Đăng nhập</div>
+
     </form>
   );
 }

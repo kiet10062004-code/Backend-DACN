@@ -28,18 +28,26 @@ export default function ProductDetail() {
       .catch(err => console.error("Lỗi khi lấy sản phẩm liên quan", err));
   }, [product]);
 
-  const addToCart = () => {
-    if (!product) return;
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const existing = cart.find(item => item.id === product.id);
-    if (existing) {
-      existing.quantity += quantity;
-    } else {
-      cart.push({ ...product, quantity });
-    }
-    localStorage.setItem("cart", JSON.stringify(cart));
-    alert(`Đã thêm ${quantity} "${product.name}" vào giỏ hàng!`);
-  };
+    const addToCart = () => {
+      if (!product) return;
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const existing = cart.find(item => item.id === product.id);
+      const totalQuantity = existing ? existing.quantity + quantity : quantity;
+
+      if (totalQuantity > product.stock) {
+        alert(`Chỉ còn ${product.stock} sản phẩm trong kho!`);
+        return;
+      }
+
+      if (existing) {
+        existing.quantity += quantity;
+      } else {
+        cart.push({ ...product, quantity });
+      }
+      localStorage.setItem("cart", JSON.stringify(cart));
+      alert(`Đã thêm ${quantity} "${product.name}" vào giỏ hàng!`);
+    };
+
 
   if (!product) return <p>Đang tải sản phẩm...</p>;
 
@@ -149,14 +157,23 @@ export default function ProductDetail() {
                 </Link>
                 <p style={{ color: "#d0021b", fontWeight: "bold" }}><span>{Number(product.price).toLocaleString('vi-VN')} VND</span></p>
                 <button
-                  onClick={() => {
-                    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-                    const existing = cart.find(item => item.id === p.id);
-                    if (existing) existing.quantity += 1;
-                    else cart.push({ ...p, quantity: 1 });
-                    localStorage.setItem("cart", JSON.stringify(cart));
-                    alert(`Đã thêm "${p.name}" vào giỏ hàng!`);
-                  }}
+                      onClick={() => {
+                        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+                        const existing = cart.find(item => item.id === p.id);
+                        const totalQuantity = existing ? existing.quantity + 1 : 1;
+
+                        if (totalQuantity > p.stock) {
+                          alert(`Chỉ còn ${p.stock} sản phẩm trong kho!`);
+                          return;
+                        }
+
+                        if (existing) existing.quantity += 1;
+                        else cart.push({ ...p, quantity: 1 });
+
+                        localStorage.setItem("cart", JSON.stringify(cart));
+                        alert(`Đã thêm "${p.name}" vào giỏ hàng!`);
+                      }}
+
                   style={{ padding: "6px 10px", background: "grey", color: "#fff", border: "none", borderRadius: "4px", cursor: "pointer" }}
                 >
                   Thêm vào giỏ

@@ -1,0 +1,11 @@
+{% extends "dashboard/base.html" %}
+{% block content %}
+<h2>Delete Product</h2>
+<p>Bạn có chắc muốn xóa sản phẩm "<strong>{{ product.name }}</strong>" không?</p>
+
+<form method="POST">
+  {% csrf_token %}
+  <button type="submit" style="background:red;color:white;padding:8px 14px;border:none;border-radius:5px">Delete</button>
+  <a href="{% url 'dashboard_home' %}" style="margin-left:10px;">Cancel</a>
+</form>
+{% endblock %}

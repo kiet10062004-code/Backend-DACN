@@ -1,0 +1,16 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="form-container">
+    <h2>{{ form.instance.pk|yesno:"Edit User,Add New User" }}</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit" class="btn btn-primary">💾 Save</button>
+        <a href="{% url 'dashboard_home' %}" class="btn btn-secondary">↩️ Cancel</a>
+    </form>
+</div>
+{% endblock %}

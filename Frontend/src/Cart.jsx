@@ -12,15 +12,22 @@ function Cart() {
     localStorage.setItem('cart', JSON.stringify(cartItems));
   }, [cartItems]);
 
-  const updateQuantity = (id, delta) => {
-    setCartItems(prev =>
-      prev.map(item =>
-        item.id === id
-          ? { ...item, quantity: Math.max(1, item.quantity + delta) }
-          : item
-      )
-    );
-  };
+    const updateQuantity = (id, delta) => {
+      setCartItems(prev =>
+        prev.map(item => {
+          if (item.id === id) {
+            const newQuantity = item.quantity + delta;
+            if (newQuantity > item.stock) {
+              alert(`Chỉ còn ${item.stock} sản phẩm trong kho!`);
+              return { ...item, quantity: item.stock };
+            }
+            return { ...item, quantity: Math.max(1, newQuantity) };
+          }
+          return item;
+        })
+      );
+    };
+
 
   const removeItem = id => {
     setCartItems(prev => prev.filter(item => item.id !== id));

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Dashboard{% endblock %}</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #6C9BCF;
+            color: white;
+            padding: 15px 30px;
+            font-size: 20px;
+        }
+        main {
+            padding: 30px;
+        }
+        footer {
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        Dashboard
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        © 2025 - Django Dashboard
+    </footer>
+</body>
+</html>
