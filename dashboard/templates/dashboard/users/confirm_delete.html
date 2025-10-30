@@ -1,12 +1,29 @@
-{% extends 'dashboard/base.html' %}
-
+{% extends "dashboard/base.html" %}
 {% block content %}
-<div class="confirm-box">
-    <h2>Are you sure you want to delete "{{ user.username }}"?</h2>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger"> Delete</button>
-        <a href="{% url 'dashboard_home' %}" class="btn btn-secondary">Cancel</a>
-    </form>
+
+<div style="max-width: 500px; margin: 60px auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); font-family: 'Poppins', sans-serif; text-align:center;">
+  <h2 style="color:#d32f2f; font-weight:600;">🗑️ Delete User</h2>
+  <p style="margin: 15px 0 25px; color:#555; font-size:15px;">
+    Are you sure you want to delete user <strong>"{{ user.username }}"</strong>?<br>
+  </p>
+
+  <form method="POST" style="display:flex; justify-content:center; gap:14px;">
+    {% csrf_token %}
+    <button type="submit"
+      style="background:#e53935; color:white; padding:10px 24px; border:none; border-radius:6px; cursor:pointer; font-weight:500; transition:0.3s;">
+      🗑️ Delete
+    </button>
+
+    <a href="{% url 'dashboard_home' %}"
+      style="background:#ccc; color:#333; padding:10px 24px; border-radius:6px; text-decoration:none; font-weight:500; transition:0.3s;">
+      ↩️ Cancel
+    </a>
+  </form>
 </div>
+
+<style>
+  button:hover { background:#c62828; }
+  a:hover { background:#bbb; }
+</style>
+
 {% endblock %}

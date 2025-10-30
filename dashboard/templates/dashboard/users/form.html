@@ -1,16 +1,58 @@
-{% extends 'dashboard/base.html' %}
-{% load static %}
-
+{% extends "dashboard/base.html" %}
 {% block content %}
-<div class="form-container">
-    <h2>{{ form.instance.pk|yesno:"Edit User,Add New User" }}</h2>
 
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
+<div style="max-width: 600px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); font-family: 'Poppins', sans-serif;">
+  <h2 style="text-align:center; margin-bottom: 25px; color:#333; font-weight:600;">
+    {% if form.instance.pk %}👤 Edit User{% else %}➕ Add New User{% endif %}
+  </h2>
 
-        <button type="submit" class="btn btn-primary">💾 Save</button>
-        <a href="{% url 'dashboard_home' %}" class="btn btn-secondary">↩️ Cancel</a>
-    </form>
+  <form method="POST" enctype="multipart/form-data" style="display:flex; flex-direction:column; gap:18px;">
+    {% csrf_token %}
+    {% for field in form %}
+      <div style="display:flex; flex-direction:column;">
+        <label style="font-weight:500; color:#444; margin-bottom:5px;">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+          <div style="color:#e74c3c; font-size:13px; margin-top:4px;">{{ field.errors|striptags }}</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <div style="display:flex; justify-content:center; gap:12px; margin-top:20px;">
+      <button type="submit"
+        style="background:#4CAF50; color:white; padding:10px 24px; border:none; border-radius:6px; cursor:pointer; font-weight:500; transition:0.3s;">
+        💾 Save
+      </button>
+
+      <a href="{% url 'dashboard_home' %}"
+        style="background:#ccc; color:#333; padding:10px 24px; border-radius:6px; text-decoration:none; font-weight:500; transition:0.3s;">
+        ↩️ Cancel
+      </a>
+    </div>
+  </form>
 </div>
+
+<style>
+  input[type="text"],
+  input[type="password"],
+  input[type="email"],
+  input[type="file"],
+  select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    outline: none;
+    font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  input:focus, select:focus {
+    border-color: #6C9BCF;
+    box-shadow: 0 0 3px rgba(108, 155, 207, 0.5);
+  }
+
+  button:hover { background:#43A047; }
+  a:hover { background:#bbb; }
+</style>
+
 {% endblock %}

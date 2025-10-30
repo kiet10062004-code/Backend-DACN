@@ -107,7 +107,7 @@
                     <tr>
                         <td>{% if user.avatar %}<img src="{{ user.avatar.url }}" class="avatar">{% else %}<img src="{% static 'dashboard/images/profile-1.jpg' %}" class="avatar">{% endif %}</td>
                         <td>{{ user.username }}</td><td>{{ user.email }}</td><td>{{user.last_name}}</td><td>{{user.first_name}}</td><td>{{ user.phone|default:"-" }}</td>
-                        <td>{{ user.date_joined|date:"Y-m-d H:i" }}</td>
+                        <td style="white-space: nowrap;">{{ user.date_joined|date:"Y-m-d H:i" }}</td>
                         <td style="vertical-align: middle; text-align: center; white-space: nowrap;">
                             <a href="{% url 'user_update' user.id %}" class="btn-edit">✏️ Edit</a> |
                             <a href="{% url 'user_delete' user.id %}" class="btn-delete">🗑️ Delete</a>
@@ -172,12 +172,11 @@
         <section id="orders-section" class="custom-section">
             <h2>Orders</h2>
             <table>
-                <thead><tr><th>ID</th><th>User</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead>
+                <thead><tr><th>ID</th><th>User</th><th>Total</th><th>Status</th></tr></thead>
                 <tbody>
                     {% for order in orders %}
                     <tr>
                         <td>{{ order.id }}</td><td>{{ order.user.username }}</td><td>{{ order.total_price }}</td><td>{{ order.status }}</td>
-                        <td><a href="#">View</a> | <a href="#">Cancel</a></td>
                     </tr>
                     {% empty %}
                     <tr><td colspan="5">No orders found</td></tr>
@@ -193,7 +192,8 @@
                 <tbody>
                     {% for payment in payments %}
                     <tr>
-                        <td>{{ payment.order.id }}</td><td>{{ payment.payment_method }}</td><td>{{ payment.payment_status }}</td><td>{{ payment.amount }} VND</td>
+                        <td>{{ payment.order.id }}</td><td>{{ payment.payment_method }}</td><td>{{ payment.payment_status }}</td><td>{{ payment.amount|floatformat:0|intcomma }} VND</td>
+
                     </tr>
                     {% empty %}
                     <tr><td colspan="4">No payments found</td></tr>
