@@ -135,7 +135,8 @@
                     <tr>
                         <td>{% if product.image %}<img src="{{ product.image.url }}" class="avatar">{% else %}<img src="{% static 'dashboard/images/profile-1.jpg' %}" class="avatar">{% endif %}</td>
                         <td>{{ product.name }}</td><td>{% if product.category %}{{ product.category.name }}{% else %}-{% endif %}</td>
-                        <td>{{ product.price }}</td><td>{{ product.stock }}</td><td>{{ product.sold }}</td><td>{{product.status}}</td>
+                        <td>{{ product.price }}</td><td>{{ product.stock }}</td><td>{{ product.sold }}</td><td>{{ product.get_status_display }}</td>
+
                         <td><a href="{% url 'product_update' product.id %}" class="btn-edit">✏️ Edit</a> |<a href="{% url 'product_delete' product.id %}" class="btn-delete">🗑️ Delete</a></td>
                     </tr>
                     {% empty %}
@@ -171,12 +172,72 @@
 
         <section id="orders-section" class="custom-section">
             <h2>Orders</h2>
+
+            <style>
+                .order-products {
+                    list-style: none;
+                    margin: 0;
+                    padding: 0;
+                }
+
+                .order-products li {
+                    display: grid;
+                    grid-template-columns: 1fr 110px 150px;
+                    align-items: center;
+                    margin-bottom: 4px;
+                    padding: 7px 11px;
+                    border-radius: 6px;
+                    font-size: 14px;
+                    font-family: "Poppins", sans-serif;
+                    color: #333;
+                    transition: 0.2s;
+                }
+
+
+
+                .order-products li span {
+                    white-space: nowrap;
+                }
+            </style>
+
             <table>
-                <thead><tr><th>ID</th><th>User</th><th>Total</th><th>Status</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>User</th>
+                        <th>Customer Name</th>
+                        <th>Customer Address</th>
+                        <th>Customer Phone</th>
+                        <th>Products</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
                 <tbody>
                     {% for order in orders %}
                     <tr>
-                        <td>{{ order.id }}</td><td>{{ order.user.username }}</td><td>{{ order.total_price }}</td><td>{{ order.status }}</td>
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.user.username }}</td>
+                        <td>{{order.customer_name}}</td>
+                        <td>{{order.customer_address}}</td>
+                        <td>{{order.customer_phone}}</td>
+                        <td>
+                            <ul class="order-products">
+                                {% for detail in order.order_details.all %}
+                                <li>
+                                    <span>{{ detail.product.name }}</span>
+                                    <span>SL: {{ detail.quantity }}</span>
+                                    <span>Giá: {{ detail.price|intcomma }} VND</span>
+                                    
+                                </li>
+                                {% empty %}
+                                <li>Không có sản phẩm</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+
+                        <td>{{ order.total_price }}</td>
+                        <td>{{ order.get_status_display }}</td>
                     </tr>
                     {% empty %}
                     <tr><td colspan="5">No orders found</td></tr>
@@ -185,6 +246,7 @@
             </table>
         </section>
 
+
         <section id="payments-section" class="custom-section">
             <h2>Payments</h2>
             <table>
@@ -192,7 +254,7 @@
                 <tbody>
                     {% for payment in payments %}
                     <tr>
-                        <td>{{ payment.order.id }}</td><td>{{ payment.payment_method }}</td><td>{{ payment.payment_status }}</td><td>{{ payment.amount|floatformat:0|intcomma }} VND</td>
+                        <td>{{ payment.order.id }}</td><td>{{ payment.payment_method }}</td><td>{{ payment.get_payment_status_display }}</td><td>{{ payment.amount|floatformat:0|intcomma }} VND</td>
 
                     </tr>
                     {% empty %}
@@ -296,11 +358,36 @@
                 <input type="number" name="year" min="2000" max="2100" value="{{ request.GET.year }}">
             </div>
 
+            <div class="filter-group">
+                <label>Sản phẩm:</label>
+
+                <input type="text" name="product_name" list="product-list" placeholder="Nhập tên sản phẩm..." 
+                    value="{{ request.GET.product_name }}" 
+                    style="padding:6px; border-radius:6px; border:1px solid #ccc; margin-right:8px;">
+
+                <datalist id="product-list">
+                    {% for p in products %}
+                        <option value="{{ p.name }}">
+                    {% endfor %}
+                </datalist>
+
+                <select name="product_id" style="padding:6px; border-radius:6px; border:1px solid #ccc;">
+                    <option value="">-- Tất cả sản phẩm --</option>
+                    {% for p in products %}
+                        <option value="{{ p.id }}" {% if request.GET.product_id == p.id|stringformat:"s" %}selected{% endif %}>
+                            {{ p.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+
             <div class="filter-actions">
                 <button type="submit" class="btn-filter">🔍 Lọc</button>
                 <button type="submit" name="reset" value="1" class="btn-reset">↩️ Reset</button>
             </div>
         </form>
+
 
 
             <table>
@@ -353,7 +440,6 @@
 
     </main>
 
-    <!-- Right Section -->
     <div class="right-section">
         <div class="nav">
             <button id="menu-btn"><span class="material-icons-sharp">menu</span></button>
@@ -371,19 +457,16 @@
 </div>
 
 <script>
-    // Sidebar toggle
     const sideMenu = document.querySelector('aside');
     document.getElementById('menu-btn').addEventListener('click', ()=>{ sideMenu.style.display='block'; });
     document.getElementById('close-btn').addEventListener('click', ()=>{ sideMenu.style.display='none'; });
 
-    // Dark mode toggle
     const darkMode = document.querySelector('.dark-mode');
 
-    // Hàm cập nhật icon active dựa trên trạng thái dark/light
     function updateDarkModeIcon() {
         if(document.body.classList.contains('dark-mode-variables')) {
-            darkMode.querySelector('span:nth-child(1)').classList.remove('active'); // light icon
-            darkMode.querySelector('span:nth-child(2)').classList.add('active');    // dark icon
+            darkMode.querySelector('span:nth-child(1)').classList.remove('active');
+            darkMode.querySelector('span:nth-child(2)').classList.add('active');    
         } else {
             darkMode.querySelector('span:nth-child(1)').classList.add('active');
             darkMode.querySelector('span:nth-child(2)').classList.remove('active');

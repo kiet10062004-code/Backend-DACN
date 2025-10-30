@@ -30,6 +30,10 @@ class ProductViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Product.objects.all()
+
+        # 👉 Lọc chỉ sản phẩm đang bán và còn hàng
+        queryset = queryset.filter(status=Product.Status.ACTIVE, stock__gt=0)
+
         category_id = self.request.query_params.get('category')
         include_children = self.request.query_params.get('include_children')
 
@@ -39,12 +43,14 @@ class ProductViewSet(viewsets.ModelViewSet):
                 if include_children == 'true':
                     child_ids = Category.objects.filter(parent_id=category_id).values_list('id', flat=True)
                     all_ids = [category_id] + list(child_ids)
-                    return queryset.filter(category_id__in=all_ids)
+                    queryset = queryset.filter(category_id__in=all_ids)
                 else:
-                    return queryset.filter(category_id=category_id)
+                    queryset = queryset.filter(category_id=category_id)
             except ValueError:
                 return queryset.none()
+
         return queryset
+
 
 
 

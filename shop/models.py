@@ -136,17 +136,27 @@ class Cart_Detail(models.Model):
         return f"{self.product.name} - {self.quantity} x {self.price}"
 
 
-
 class Payment(models.Model):
+    class Status(models.TextChoices):
+        PENDING = 'pending', 'Chờ xử lý'
+        SUCCESS = 'success', 'Thành công'
+        FAILED = 'failed', 'Thất bại'
+        CANCELLED = 'cancelled', 'Đã hủy'
+
     order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name='payment')
-    momo_order_id = models.CharField(max_length=100, blank=True, null=True)  # thêm dòng này
+    momo_order_id = models.CharField(max_length=100, blank=True, null=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
-    payment_method = models.CharField(max_length=50, default='momo')  
-    payment_status = models.CharField(max_length=20, default='pending') 
+    payment_method = models.CharField(max_length=50, default='momo')
+    payment_status = models.CharField(
+        max_length=20,
+        choices=Status.choices,   # ✅ thêm choices
+        default=Status.PENDING
+    )
 
     class Meta:
         db_table = 'Payment'
+
     def save(self, *args, **kwargs):
         is_new = self.pk is None
         old_status = None
@@ -155,21 +165,19 @@ class Payment(models.Model):
 
         super().save(*args, **kwargs)
 
-        if self.payment_status == 'success' and old_status != 'success':
+        if self.payment_status == self.Status.SUCCESS and old_status != self.Status.SUCCESS:
             self.order.status = 'paid'
             self.order.save()
             Revenue.update_revenue(self.order)
-        elif self.payment_status == 'cancelled':
+        elif self.payment_status == self.Status.CANCELLED:
             self.order.status = 'cancelled'
             self.order.save()
-        elif self.payment_status == 'failed':
+        elif self.payment_status == self.Status.FAILED:
             self.order.status = 'failed'
             self.order.save()
 
-
-        def __str__(self):
-            return f"Thanh toán {self.get_payment_status_display()} cho đơn #{self.order.id}"
-
+    def __str__(self):
+        return f"Thanh toán {self.get_payment_status_display()} cho đơn #{self.order.id}"
 
 class Revenue(models.Model):
     date = models.DateField(default=date.today)

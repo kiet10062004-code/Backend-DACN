@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.db.models.functions import TruncDate
 User = get_user_model()
 from django.db.models import Sum
-from shop.models import Product, Category, Order, Payment, Order_Detail, Revenue
+from shop.models import Product, Category, Order, Payment, Order_Detail, Revenue,Order_Detail
 from .forms import UserForm,ProductForm,CategoryForm
 from django.db.models.functions import TruncDate, TruncMonth, TruncYear
 
@@ -15,35 +15,39 @@ def dashboard_home(request):
     orders = Order.objects.all().order_by('id')
     payments = Payment.objects.all().order_by('id')
     revenues = Revenue.objects.all()
-    
+    order_detail = Order_Detail.objects.all().order_by('id')
     day = request.GET.get('day')
     month = request.GET.get('month')
     year = request.GET.get('year')
+    product_id = request.GET.get('product_id')
     reset = request.GET.get('reset')
     section_target = request.GET.get('section', '')
+    product_name = request.GET.get('product_name')  
 
     if reset:
         from django.urls import reverse
         return redirect(f"{reverse('dashboard_home')}?section={section_target}")
-
+    if product_name:
+        revenues = revenues.filter(product__name__icontains=product_name)
+    elif product_id:
+        revenues = revenues.filter(product_id=product_id)
     if day:
         revenues = revenues.filter(date=day)
-        group_by = TruncDate('date')   # nhóm theo ngày
+        group_by = TruncDate('date')   
     elif month and year:
         revenues = revenues.filter(date__month=month, date__year=year)
-        group_by = TruncDate('date')   # biểu đồ từng ngày trong tháng
+        group_by = TruncDate('date')  
     elif month:
         revenues = revenues.filter(date__month=month)
         group_by = TruncDate('date')
     elif year:
         revenues = revenues.filter(date__year=year)
-        group_by = TruncMonth('date')  # biểu đồ từng tháng trong năm
+        group_by = TruncMonth('date')
     else:
-        group_by = TruncMonth('date')  # mặc định: theo tháng
+        group_by = TruncMonth('date')  
     
     total_sales = revenues.aggregate(total=Sum('total'))['total'] or 0
     order_detail = Order_Detail.objects.all()
-        # === Dữ liệu biểu đồ doanh thu theo ngày ===
     chart_data = (
         revenues.annotate(period=group_by)
         .values('period')
@@ -133,8 +137,6 @@ def category_delete(request, pk):
         return redirect('dashboard_home')
     return render(request, 'dashboard/categories/confirm_delete.html', {'category': category})
 
-
-# ========== PRODUCT CRUD ==========
 
 def product_create(request):
     if request.method == 'POST':
