@@ -277,7 +277,7 @@ def momo_create_payment(request, order_id):
             headers={"Content-Type": "application/json"}
         )
         res_data = res.json()
-        print("💰 MoMo response:", res_data)
+        print(" MoMo response:", res_data)
 
         payment, _ = Payment.objects.get_or_create(order=order)
         payment.payment_method = "MoMo"

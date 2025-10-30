@@ -236,7 +236,7 @@
                             </ul>
                         </td>
 
-                        <td>{{ order.total_price }}</td>
+                        <td>{{ order.total_price|intcomma }}</td>
                         <td>{{ order.get_status_display }}</td>
                     </tr>
                     {% empty %}
