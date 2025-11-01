@@ -6,8 +6,9 @@ function Thanhtoan() {
   const [formData, setFormData] = useState({
     name: "",
     address: "",
-    phone: ""
+    phone: "",
   });
+  const [paymentMethod, setPaymentMethod] = useState(""); // ✅ thêm state chọn phương thức
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -23,10 +24,7 @@ function Thanhtoan() {
     0
   );
 
-  const validatePhone = (phone) => {
-    const regex = /^0\d{9,10}$/; // 10-11 số, bắt đầu bằng 0
-    return regex.test(phone);
-  };
+  const validatePhone = (phone) => /^0\d{9,10}$/.test(phone);
 
   const handleSubmit = async () => {
     const newErrors = {};
@@ -35,19 +33,17 @@ function Thanhtoan() {
     if (!formData.phone) newErrors.phone = "Vui lòng nhập số điện thoại!";
     else if (!validatePhone(formData.phone))
       newErrors.phone = "Số điện thoại không hợp lệ. Ví dụ: 0912345678";
-
     if (cartItems.length === 0) newErrors.cart = "Giỏ hàng trống!";
+    if (!paymentMethod) newErrors.method = "Vui lòng chọn phương thức thanh toán!";
 
     setErrors(newErrors);
-
-    if (Object.keys(newErrors).length > 0) return; // có lỗi -> dừng
+    if (Object.keys(newErrors).length > 0) return;
 
     try {
       setLoading(true);
       let orderRes;
 
       try {
-        // Gọi API tạo Order lần đầu
         orderRes = await axios.post(
           "http://127.0.0.1:8000/api/Order/",
           {
@@ -57,16 +53,16 @@ function Thanhtoan() {
             total_price: total,
             status: "pending",
             payment_method: "momo",
-            items: cartItems.map(item => ({
+            items: cartItems.map((item) => ({
               product: item.id,
               quantity: item.quantity,
-              price: item.price
-            }))
+              price: item.price,
+            })),
           },
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`
-            }
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
           }
         );
       } catch (err) {
@@ -87,16 +83,16 @@ function Thanhtoan() {
                 total_price: total,
                 status: "pending",
                 payment_method: "momo",
-                items: cartItems.map(item => ({
+                items: cartItems.map((item) => ({
                   product: item.id,
                   quantity: item.quantity,
-                  price: item.price
-                }))
+                  price: item.price,
+                })),
               },
               {
                 headers: {
-                  Authorization: `Bearer ${refreshRes.data.access}`
-                }
+                  Authorization: `Bearer ${refreshRes.data.access}`,
+                },
               }
             );
           } catch (refreshErr) {
@@ -115,13 +111,14 @@ function Thanhtoan() {
       const order = orderRes.data;
       const orderId = order.id;
 
+      // ✅ Gửi phương thức thanh toán sang backend
       const momoRes = await axios.post(
         `http://127.0.0.1:8000/momo/create/${orderId}/`,
-        {},
+        { type: paymentMethod },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`
-          }
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
         }
       );
 
@@ -149,26 +146,45 @@ function Thanhtoan() {
     border: "1px solid #ccc",
     width: "100%",
     fontSize: "14px",
-    outline: "none"
+    outline: "none",
   };
 
   const errorStyle = {
     color: "red",
     fontSize: "12px",
-    marginTop: "4px"
+    marginTop: "4px",
   };
 
   return (
-    <div style={{ padding: "30px", maxWidth: "700px", margin: "0 auto", fontFamily: "Arial, sans-serif" }}>
-      <h2 style={{ marginBottom: "20px", color: "#333" }}>Thông tin thanh toán</h2>
+    <div
+      style={{
+        padding: "30px",
+        maxWidth: "700px",
+        margin: "0 auto",
+        fontFamily: "Arial, sans-serif",
+      }}
+    >
+      <h2 style={{ marginBottom: "20px", color: "#333" }}>
+        Thông tin thanh toán
+      </h2>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "15px", marginBottom: "30px" }}>
+      {/* Nhập thông tin cá nhân */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "15px",
+          marginBottom: "30px",
+        }}
+      >
         <div>
           <input
             type="text"
             placeholder="Họ tên"
             value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, name: e.target.value })
+            }
             style={inputStyle}
           />
           {errors.name && <div style={errorStyle}>{errors.name}</div>}
@@ -178,7 +194,9 @@ function Thanhtoan() {
             type="text"
             placeholder="Địa chỉ"
             value={formData.address}
-            onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, address: e.target.value })
+            }
             style={inputStyle}
           />
           {errors.address && <div style={errorStyle}>{errors.address}</div>}
@@ -188,33 +206,78 @@ function Thanhtoan() {
             type="text"
             placeholder="Số điện thoại"
             value={formData.phone}
-            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, phone: e.target.value })
+            }
             style={inputStyle}
           />
           {errors.phone && <div style={errorStyle}>{errors.phone}</div>}
         </div>
       </div>
 
+      {/* ✅ Chọn phương thức thanh toán */}
+      <h3 style={{ marginBottom: "10px", color: "#333" }}>
+        Chọn phương thức thanh toán
+      </h3>
+      <div style={{ marginBottom: "20px" }}>
+        <label style={{ display: "block", marginBottom: "8px" }}>
+          <input
+            type="radio"
+            name="paymentMethod"
+            value="wallet"
+            checked={paymentMethod === "wallet"}
+            onChange={(e) => setPaymentMethod(e.target.value)}
+            style={{ marginRight: "8px" }}
+          />
+          Ví MoMo (Quét mã QR)
+        </label>
+        <label style={{ display: "block" }}>
+          <input
+            type="radio"
+            name="paymentMethod"
+            value="atm"
+            checked={paymentMethod === "atm"}
+            onChange={(e) => setPaymentMethod(e.target.value)}
+            style={{ marginRight: "8px" }}
+          />
+          Thẻ ATM nội địa (qua MoMo)
+        </label>
+        {errors.method && <div style={errorStyle}>{errors.method}</div>}
+      </div>
+
+      {/* Giỏ hàng */}
       <h3 style={{ marginBottom: "15px", color: "#333" }}>Giỏ hàng</h3>
       {cartItems.length === 0 ? (
         <p>Không có sản phẩm nào trong giỏ hàng.</p>
       ) : (
-        <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: "20px" }}>
+        <table
+          style={{
+            width: "100%",
+            borderCollapse: "collapse",
+            marginBottom: "20px",
+          }}
+        >
           <thead style={{ background: "#f5f5f5" }}>
             <tr>
-              <th style={{ padding: "10px", borderBottom: "1px solid #ddd", textAlign: "left" }}>Sản phẩm</th>
-              <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Số lượng</th>
-              <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Giá</th>
-              <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Tổng</th>
+              <th style={{ padding: "10px", textAlign: "left" }}>Sản phẩm</th>
+              <th style={{ padding: "10px" }}>SL</th>
+              <th style={{ padding: "10px" }}>Giá</th>
+              <th style={{ padding: "10px" }}>Tổng</th>
             </tr>
           </thead>
           <tbody>
             {cartItems.map((item) => (
-              <tr key={item.id} style={{ borderBottom: "1px solid #eee" }}>
+              <tr key={item.id}>
                 <td style={{ padding: "10px" }}>{item.name}</td>
-                <td style={{ padding: "10px", textAlign: "center" }}>{item.quantity}</td>
-                <td style={{ padding: "10px", textAlign: "right" }}>{item.price.toLocaleString()} VND</td>
-                <td style={{ padding: "10px", textAlign: "right" }}>{(item.price * item.quantity).toLocaleString()} VND</td>
+                <td style={{ padding: "10px", textAlign: "center" }}>
+                  {item.quantity}
+                </td>
+                <td style={{ padding: "10px", textAlign: "right" }}>
+                  {item.price.toLocaleString()} VND
+                </td>
+                <td style={{ padding: "10px", textAlign: "right" }}>
+                  {(item.price * item.quantity).toLocaleString()} VND
+                </td>
               </tr>
             ))}
           </tbody>
@@ -222,11 +285,15 @@ function Thanhtoan() {
       )}
       {errors.cart && <div style={errorStyle}>{errors.cart}</div>}
 
-      <h3 style={{ textAlign: "right", marginBottom: "20px", color: "black" }}>
+      <h3 style={{ textAlign: "right", color: "black" }}>
         Tổng cộng: {total.toLocaleString()} VND
       </h3>
 
-      {errors.submit && <div style={{ ...errorStyle, textAlign: "center", marginBottom: "10px" }}>{errors.submit}</div>}
+      {errors.submit && (
+        <div style={{ ...errorStyle, textAlign: "center" }}>
+          {errors.submit}
+        </div>
+      )}
 
       <button
         onClick={handleSubmit}
@@ -241,7 +308,6 @@ function Thanhtoan() {
           fontSize: "16px",
           fontWeight: "bold",
           cursor: loading ? "not-allowed" : "pointer",
-          transition: "background 0.3s"
         }}
       >
         {loading ? "Đang xử lý..." : "Thanh toán"}

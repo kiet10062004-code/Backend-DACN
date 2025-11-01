@@ -228,13 +228,17 @@ def momo_create_payment(request, order_id):
 
     amount = str(int(order.total_price))
     order_info = f"Thanh toán đơn hàng #{order.id} với MoMo"
-    # Tạo orderId mới mỗi lần để tránh trùng & tránh payUrl cũ
     order_id_str = f"{order.id}_{uuid.uuid4().hex[:6]}"
     request_id = str(uuid.uuid4())
-    request_type = "captureWallet"
+
+    payment_type = request.data.get("type", "wallet")  
+    if payment_type == "atm":
+        request_type = "payWithATM"
+    else:
+        request_type = "captureWallet"
+
     extra_data = ""
 
-    # Tạo chữ ký
     raw_signature = (
         f"accessKey={MOMO_ACCESS_KEY}"
         f"&amount={amount}"
@@ -254,7 +258,6 @@ def momo_create_payment(request, order_id):
         hashlib.sha256
     ).hexdigest()
 
-    # Payload gửi sang MoMo
     payload = {
         "partnerCode": MOMO_PARTNER_CODE,
         "partnerName": "TestShop",
@@ -265,6 +268,7 @@ def momo_create_payment(request, order_id):
         "orderInfo": order_info,
         "redirectUrl": REDIRECT_URL,
         "ipnUrl": IPN_URL,
+        "lang": "vi",
         "extraData": extra_data,
         "requestType": request_type,
         "signature": signature,
@@ -277,10 +281,10 @@ def momo_create_payment(request, order_id):
             headers={"Content-Type": "application/json"}
         )
         res_data = res.json()
-        print(" MoMo response:", res_data)
+        print("📡 MoMo response:", res_data)
 
         payment, _ = Payment.objects.get_or_create(order=order)
-        payment.payment_method = "MoMo"
+        payment.payment_method = "MoMo ATM" if payment_type == "atm" else "MoMo QR"
         payment.payment_status = "pending"
         payment.amount = order.total_price
         payment.momo_order_id = order_id_str
@@ -293,8 +297,9 @@ def momo_create_payment(request, order_id):
         })
 
     except Exception as e:
-        print(" Lỗi khi gọi MoMo:", e)
+        print("❌ Lỗi khi gọi MoMo:", e)
         return JsonResponse({"error": "Lỗi khi gọi API MoMo", "details": str(e)}, status=500)
+
 
 
 @csrf_exempt
