@@ -16,7 +16,6 @@ function Dangky() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // ================== CSS ==================
   const containerStyle = {
     maxWidth: '400px',
     margin: '50px auto',
@@ -70,7 +69,6 @@ function Dangky() {
     marginTop: '15px',
     transition: 'background 0.3s'
   };
-  // =========================================
 
   const validateForm = () => {
     const { username, email, phone, first_name, last_name, password } = form;
@@ -115,7 +113,6 @@ function Dangky() {
 
     setLoading(true);
 
-    // kiểm tra trùng
     const exists = await checkExists();
     const errors = {};
     if (exists.username) errors.username = 'Username đã tồn tại';
@@ -128,7 +125,6 @@ function Dangky() {
       return;
     }
 
-    // submit form
     try {
       await axios.post('http://127.0.0.1:8000/register/', form);
       navigate('/login');

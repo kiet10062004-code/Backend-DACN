@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-// Mapping trạng thái giao hàng (giống DELIVERY_CHOICES ở Django)
 const DELIVERY_CHOICES = {
   not_delivered: "Chưa giao",
   delivering: "Đang giao",
@@ -13,10 +12,9 @@ function TraCuuDonHang() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState(null); // Đơn hàng đang xem
+  const [selectedOrder, setSelectedOrder] = useState(null); 
   const [darkMode, setDarkMode] = useState(false);
 
-  // Dark mode lưu localStorage
   useEffect(() => {
     const saved = localStorage.getItem('darkMode') === 'true';
     setDarkMode(saved);
@@ -128,7 +126,6 @@ function TraCuuDonHang() {
         </table>
       )}
 
-      {/* Modal chi tiết */}
       {selectedOrder && (
         <div style={{
           position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
@@ -176,7 +173,6 @@ function TraCuuDonHang() {
         </div>
       )}
 
-      {/* CSS Dark mode */}
       <style>{`
         body.dark-mode {
           background: #181a1e;

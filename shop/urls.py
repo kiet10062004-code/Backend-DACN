@@ -39,7 +39,7 @@ urlpatterns = [
     path('api/request-password-reset/', views.request_password_reset, name='request_password_reset'),
     path('api/reset-password/', views.reset_password, name='reset_password'),
     path('api/verify-otp/', views.verify_otp, name='verify_otp'),
-    path('api/check-user/', check_user, name='check_user'),  # bỏ .as_view()
+    path('api/check-user/', check_user, name='check_user'),  
     path('api/user/', views.user_info, name='user_info'),
 
 ]

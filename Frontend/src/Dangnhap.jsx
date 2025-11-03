@@ -8,7 +8,6 @@ function Dangnhap({ setIsLoggedIn, goToForgotPassword }) {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // ================== CSS ==================
   const containerStyle = {
     maxWidth: '400px',
     margin: '50px auto',
@@ -25,7 +24,6 @@ function Dangnhap({ setIsLoggedIn, goToForgotPassword }) {
   const errorStyle = { color: "red", fontSize: "0.85em", marginTop: "4px" };
   const buttonStyle = { width: '100%', padding: '12px', background: '#2196F3', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '16px', fontWeight: 'bold', cursor: loading ? 'not-allowed' : 'pointer', marginTop: '15px', transition: 'background 0.3s' };
   const forgotStyle = { marginTop: '10px', textAlign: 'right', color: '#2196F3', cursor: 'pointer', fontSize: '0.9em' };
-  // =========================================
 
   const validateForm = () => {
     const errors = {};
@@ -54,7 +52,6 @@ const handleSubmit = async (e) => {
     localStorage.setItem('access_token', access);
     localStorage.setItem('refresh_token', refresh);
 
-    // 🔹 Gọi API user info để kiểm tra superuser
     const userRes = await axios.get('http://127.0.0.1:8000/api/user/', {
       headers: { Authorization: `Bearer ${access}` }
     });
@@ -62,11 +59,10 @@ const handleSubmit = async (e) => {
     const user = userRes.data;
     setIsLoggedIn(true);
 
-    // 🔹 Nếu là superuser → vào dashboard
     if (user.is_superuser) {
       window.location.href = 'http://127.0.0.1:8000/dashboard/';
     } else {
-      navigate('/'); // Người dùng thường → homepage
+      navigate('/'); 
     }
 
   } catch (err) {

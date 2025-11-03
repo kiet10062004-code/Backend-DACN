@@ -817,7 +817,6 @@ body.dark-mode-variables .order-products li:hover {
     background-color: rgba(255,255,255,0.02) !important;
 }
 
-/* modal (nếu cần) */
 body.dark-mode-variables .modal-content {
     background-color: #232428 !important;
     color: #eaeaea !important;
@@ -837,7 +836,7 @@ body.dark-mode-variables .order-products .product-qty {
 }
 
 .order-products .product-name {
-    flex: 1; /* chiếm không gian còn lại */
+    flex: 1; 
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -845,4 +844,38 @@ body.dark-mode-variables .order-products .product-qty {
 .order-products .product-qty {
     min-width: 60px;
     text-align: right;
+}
+:root {
+    --btn-text-color: black; 
+}
+
+body.dark-mode {
+    --btn-text-color: white;
+}
+
+.btn-detail, .btn-edit, .btn-delete {
+    color: var(--btn-text-color);
+    background-color: #f0f0f0; 
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+body.dark-mode .btn-detail,
+body.dark-mode .btn-edit,
+body.dark-mode .btn-delete {
+    background-color: #333;
+    border-color: #555;
+}
+body.dark-mode-variables .btn-detail,
+body.dark-mode-variables .btn-edit,
+body.dark-mode-variables .btn-delete {
+    color: #fff;  
+}
+
+body:not(.dark-mode-variables) .btn-detail,
+body:not(.dark-mode-variables) .btn-edit,
+body:not(.dark-mode-variables) .btn-delete {
+    color: #000;  
 }

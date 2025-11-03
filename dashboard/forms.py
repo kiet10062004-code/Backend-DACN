@@ -29,7 +29,6 @@ class CategoryForm(forms.ModelForm):
         fields = ['name', 'parent']
 
 
-# ✅ Form chỉnh sửa đơn hàng
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
@@ -51,7 +50,6 @@ class OrderForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Tuỳ biến hiển thị giao diện cho các field
         self.fields['customer_name'].widget.attrs.update({
             'placeholder': 'Tên khách hàng',
             'class': 'form-control'

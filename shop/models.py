@@ -56,10 +56,8 @@ class Product(models.Model):
     def __str__(self):
         return f"{self.name} ({self.get_status_display()})"
     def save(self, *args, **kwargs):
-            # Nếu stock = 0 thì set status = OUT_OF_STOCK
         if self.stock <= 0 and self.status != self.Status.OUT_OF_STOCK:
             self.status = self.Status.OUT_OF_STOCK
-        # Nếu stock > 0 và đang là OUT_OF_STOCK thì đổi lại ACTIVE
         elif self.stock > 0 and self.status == self.Status.OUT_OF_STOCK:
             self.status = self.Status.ACTIVE
         super().save(*args, **kwargs)   
@@ -162,7 +160,7 @@ class Payment(models.Model):
     payment_method = models.CharField(max_length=50, default='momo')
     payment_status = models.CharField(
         max_length=20,
-        choices=Status.choices,   # ✅ thêm choices
+        choices=Status.choices,   
         default=Status.PENDING
     )
 
@@ -210,14 +208,11 @@ class Revenue(models.Model):
     def update_revenue(cls, order):
         with transaction.atomic():
             for item in order.order_details.select_related('product'):
-                # Khóa sản phẩm trong DB để tránh oversell
                 product = Product.objects.select_for_update().get(pk=item.product.pk)
 
-                # Nếu tồn kho không đủ thì báo lỗi (hoặc rollback)
                 if product.stock < item.quantity:
                     raise ValueError(f"Sản phẩm {product.name} đã hết hàng")
 
-                # Cập nhật doanh thu
                 obj, _ = cls.objects.get_or_create(
                     date=date.today(),
                     product=product,
@@ -228,7 +223,6 @@ class Revenue(models.Model):
                     total=F('total') + (item.price * item.quantity)
                 )
 
-                # Trừ kho thật
                 product.stock = F('stock') - item.quantity
                 product.sold = F('sold') + item.quantity
                 product.save()

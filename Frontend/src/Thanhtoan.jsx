@@ -8,7 +8,7 @@ function Thanhtoan() {
     address: "",
     phone: "",
   });
-  const [paymentMethod, setPaymentMethod] = useState(""); // ✅ thêm state chọn phương thức
+  const [paymentMethod, setPaymentMethod] = useState(""); 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -111,7 +111,6 @@ function Thanhtoan() {
       const order = orderRes.data;
       const orderId = order.id;
 
-      // ✅ Gửi phương thức thanh toán sang backend
       const momoRes = await axios.post(
         `http://127.0.0.1:8000/momo/create/${orderId}/`,
         { type: paymentMethod },
@@ -215,7 +214,6 @@ function Thanhtoan() {
         </div>
       </div>
 
-      {/* ✅ Chọn phương thức thanh toán */}
       <h3 style={{ marginBottom: "10px", color: "#333" }}>
         Chọn phương thức thanh toán
       </h3>
@@ -245,7 +243,6 @@ function Thanhtoan() {
         {errors.method && <div style={errorStyle}>{errors.method}</div>}
       </div>
 
-      {/* Giỏ hàng */}
       <h3 style={{ marginBottom: "15px", color: "#333" }}>Giỏ hàng</h3>
       {cartItems.length === 0 ? (
         <p>Không có sản phẩm nào trong giỏ hàng.</p>
