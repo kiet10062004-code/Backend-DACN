@@ -220,7 +220,7 @@
                         <td>{{ order.user.username }}</td>
                         <td>{{order.customer_name}}</td>
                         <td>{{order.customer_address}}</td>
-                        <td>{{order.customer_phone}}</td>
+                        <td style="white-space: nowrap">{{order.customer_phone}}</td>
                         <td>
                             <ul class="order-products">
                                 {% for detail in order.order_details.all %}

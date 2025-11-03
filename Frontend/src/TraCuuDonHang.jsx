@@ -69,8 +69,11 @@ function TraCuuDonHang() {
       <thead style={{ background: '#f5f5f5' }}>
         <tr>
           <th style={{ padding: '10px', borderBottom: '1px solid #ccc' }}>Mã đơn</th>
+          <th style={{ padding: '10px', borderBottom: '1px solid #ccc' }}>Tên người đặt</th>
+          <th style={{ padding: '10px', borderBottom: '1px solid #ccc' }}>Địa chỉ</th>
+          <th style={{ padding: '10px', borderBottom: '1px solid #ccc' }}>Số điện thoại</th>
           <th style={{ padding: '10px', borderBottom: '1px solid #ccc' }}>Trạng thái</th>
-          <th style={{ padding: '10px', borderBottom: '1px solid #ccc' }}>Ngày tạo</th>
+          <th style={{ padding: '10px', borderBottom: '1px solid #ccc' }}>Ngày đặt</th>
           <th style={{ padding: '10px', borderBottom: '1px solid #ccc' }}>Tổng tiền</th>
         </tr>
       </thead>
@@ -79,7 +82,10 @@ function TraCuuDonHang() {
           <tr key={order.id} style={{ borderBottom: '1px solid #eee', transition: 'background 0.2s' }} 
               onMouseEnter={e => e.currentTarget.style.background = '#fafafa'}
               onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-            <td style={{ padding: '10px' }}>#{order.id}</td>
+            <td style={{ padding: '10px' }}>{order.id}</td>
+            <td style={{ padding: '10px' }}>{order.customer_name}</td>
+            <td style={{ padding: '10px' }}>{order.customer_address}</td>
+            <td style={{ padding: '10px' }}>{order.customer_phone}</td>
             <td style={{ padding: '10px' }}>{order.status_display}</td>
             <td style={{ padding: '10px' }}>{new Date(order.created_at).toLocaleString()}</td>
             <td style={{ padding: '10px' }}> <span>{Number(order.total_price).toLocaleString('vi-VN')} VND</span></td>
