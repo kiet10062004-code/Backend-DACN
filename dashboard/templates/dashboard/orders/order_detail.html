@@ -1,0 +1,31 @@
+{% extends "dashboard/base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Chi tiết đơn hàng #{{ order.id }}</h2>
+    <table class="table table-bordered mt-3">
+        <tr><th>Người đặt</th><td>{{ order.user.username }}</td></tr>
+        <tr><th>Tên khách hàng</th><td>{{ order.customer_name }}</td></tr>
+        <tr><th>Địa chỉ</th><td>{{ order.customer_address }}</td></tr>
+        <tr><th>Số điện thoại</th><td>{{ order.customer_phone }}</td></tr>
+        <tr><th>Tổng tiền</th><td>{{ order.total_price|intcomma }} VND</td></tr>
+        <tr><th>Trạng thái</th><td>{{ order.get_status_display }}</td></tr>
+        <tr><th>Tình trạng giao hàng</th><td>{{ order.get_delivery_status_display }}</td></tr>
+        <tr><th>Shipper</th><td>{{ order.shipper_name|default:"(Chưa có)" }}</td></tr>
+        <tr><th>SĐT Shipper</th><td>{{ order.shipper_phone|default:"(Chưa có)" }}</td></tr>
+        <tr><th>Bắt đầu giao</th><td>{{ order.delivery_start|date:"d/m/Y H:i"|default:"(Chưa có)" }}</td></tr>
+        <tr><th>Kết thúc giao</th><td>{{ order.delivery_end|date:"d/m/Y H:i"|default:"(Chưa có)" }}</td></tr>
+    </table>
+
+    <h4>Sản phẩm trong đơn:</h4>
+    <ul>
+        {% for detail in order.order_details.all %}
+        <li>
+            {{ detail.product.name }} - SL: {{ detail.quantity }} - 
+            Giá: {{ detail.price|intcomma }} VND
+        </li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'order_list' %}" class="btn btn-secondary mt-3">⬅ Quay lại danh sách</a>
+</div>
+{% endblock %}

@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'dashboard/style.css' %}">
-<title>Dashboard | MoreLen</title>
+<title>Bảng điều khiển | MoreLen</title>
 <style>
     main section.custom-section { display: none; margin-bottom: 30px; }
     main section.custom-section.active { display: block; }
@@ -40,16 +40,15 @@
             <div class="close" id="close-btn"><span class="material-icons-sharp">close</span></div>
         </div>
         <div class="sidebar">
-            <a href="#" class="active" data-target="dashboard-section"><span class="material-icons-sharp">dashboard</span><h3>Dashboard</h3></a>
-            <a href="#" data-target="users-section"><span class="material-icons-sharp">person_outline</span><h3>Users</h3></a>
-            <a href="#" data-target="products-section"><span class="material-icons-sharp">inventory</span><h3>Products</h3></a>
-            <a href="#" data-target="categories-section"><span class="material-icons-sharp">category</span><h3>Categories</h3></a>
-            <a href="#" data-target="orders-section"><span class="material-icons-sharp">receipt_long</span><h3>Orders</h3></a>
-            <a href="#" data-target="payments-section"><span class="material-icons-sharp">payment</span><h3>Payments</h3></a>
-            <a href="#" data-target="revenues-section"><span class="material-icons-sharp">analytics</span><h3>Revenues</h3></a>
-            <a href="#"><span class="material-icons-sharp">settings</span><h3>Settings</h3></a>
-            <a href="#"><span class="material-icons-sharp">add</span><h3>New Login</h3></a>
-            <a href="http://localhost:5173/login"><span class="material-icons-sharp">logout</span><h3>Logout</h3></a>
+            <a href="#" class="active" data-target="dashboard-section"><span class="material-icons-sharp">dashboard</span><h3>Bảng điều khiển</h3></a>
+            <a href="#" data-target="users-section"><span class="material-icons-sharp">person_outline</span><h3>Người dùng</h3></a>
+            <a href="#" data-target="products-section"><span class="material-icons-sharp">inventory</span><h3>Sản phẩm</h3></a>
+            <a href="#" data-target="categories-section"><span class="material-icons-sharp">category</span><h3>Danh mục</h3></a>
+            <a href="#" data-target="orders-section"><span class="material-icons-sharp">receipt_long</span><h3>Đơn hàng</h3></a>
+            <a href="#" data-target="payments-section"><span class="material-icons-sharp">payment</span><h3>Thanh toán</h3></a>
+            <a href="#" data-target="revenues-section"><span class="material-icons-sharp">analytics</span><h3>Doanh thu</h3></a>
+
+            <a href="http://localhost:5173/login"><span class="material-icons-sharp">logout</span><h3>Đăng xuất</h3></a>
         </div>
     </aside>
 
@@ -96,11 +95,11 @@
             <a href="{% url 'user_create' %}" 
             class="btn-add" 
             style="float: right; background:#2196F3;color:white;padding:8px 14px;border-radius:6px;text-decoration:none;margin-bottom:8px">
-            ➕ Add User
+            Thêm người dùng
             </a>
             <table>
                 <thead>
-                    <tr><th>Avatar</th><th>Username</th><th>Email</th><th>Last name</th><th>First name</th><th>Phone</th><th>Joined</th><th>Actions</th></tr>
+                    <tr><th>Ảnh đại diện</th><th>Tên người dùng</th><th>Email</th><th>Tên</th><th>Họ</th><th>SĐT</th><th>Ngày tạo</th><th></th></tr>
                 </thead>
                 <tbody>
                     {% for user in users %}
@@ -109,12 +108,12 @@
                         <td>{{ user.username }}</td><td>{{ user.email }}</td><td>{{user.last_name}}</td><td>{{user.first_name}}</td><td>{{ user.phone|default:"-" }}</td>
                         <td style="white-space: nowrap;">{{ user.date_joined|date:"Y-m-d H:i" }}</td>
                         <td style="vertical-align: middle; text-align: center; white-space: nowrap;">
-                            <a href="{% url 'user_update' user.id %}" class="btn-edit">✏️ Edit</a> |
-                            <a href="{% url 'user_delete' user.id %}" class="btn-delete">🗑️ Delete</a>
+                            <a href="{% url 'user_update' user.id %}" class="btn-edit">Sửa</a> 
+                            <a href="{% url 'user_delete' user.id %}" class="btn-delete">Xóa</a>
                         </td>   
                     </tr>
                     {% empty %}
-                    <tr><td colspan="8">No users found</td></tr>
+                    <tr><td colspan="8">Không tìm thấy người dùng nào</td></tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -126,10 +125,10 @@
         style="float:right; background:#2196F3; color:white; 
                 padding:8px 14px; border-radius:6px; text-decoration:none; 
                 margin-bottom:10px; display:inline-block;">
-        ➕ Add Product
+        Thêm sản phẩm
         </a>
             <table>
-                <thead><tr><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Sold</th><th>Status</th><th>Actions</th></tr></thead>
+                <thead><tr><th>Ảnh</th><th>Tên</th><th>Danh mục</th><th>Giá</th><th>Tồn kho</th><th>Đã bán</th><th>Trạng thái</th><th></th></tr></thead>
                 <tbody>
                     {% for product in products %}
                     <tr>
@@ -137,10 +136,11 @@
                         <td>{{ product.name }}</td><td>{% if product.category %}{{ product.category.name }}{% else %}-{% endif %}</td>
                         <td>{{ product.price }}</td><td>{{ product.stock }}</td><td>{{ product.sold }}</td><td>{{ product.get_status_display }}</td>
 
-                        <td><a href="{% url 'product_update' product.id %}" class="btn-edit">✏️ Edit</a> |<a href="{% url 'product_delete' product.id %}" class="btn-delete">🗑️ Delete</a></td>
+                        <td><a href="{% url 'product_update' product.id %}" class="btn-edit">Sửa</a> 
+                            <a href="{% url 'product_delete' product.id %}" class="btn-delete">Xóa</a></td>
                     </tr>
                     {% empty %}
-                    <tr><td colspan="7">No products found</td></tr>
+                    <tr><td colspan="7">Không tìm thấy sản phẩm nào</td></tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -152,105 +152,344 @@
             style="float:right; background:#2196F3; color:white; 
                     padding:8px 14px; border-radius:6px; text-decoration:none; 
                     margin-bottom:10px; display:inline-block;">
-            ➕ Add Category
+            Thêm danh mục
             </a>
             <table>
-                <thead><tr><th>Name</th><th>Parent</th><th>Actions</th></tr></thead>
+                <thead><tr><th>Tên</th><th>Danh mục cha</th><th></th></tr></thead>
                 <tbody>
                     {% for category in categories %}
                     <tr>
                         <td>{{ category.name }}</td>
                         <td>{% if category.parent %}{{ category.parent.name }}{% else %}-{% endif %}</td>
-                        <td><a href="{% url 'category_update' category.id %}" class="btn-edit">✏️ Edit</a> |<a href="{% url 'category_delete' category.id %}" class="btn-delete">🗑️ Delete</a></td>
+                        <td><a href="{% url 'category_update' category.id %}" class="btn-edit">Sửa</a> <a href="{% url 'category_delete' category.id %}" class="btn-delete">Xóa</a></td>
                     </tr>
                     {% empty %}
-                    <tr><td colspan="3">No categories found</td></tr>
+                    <tr><td colspan="3">Không tim thấy danh mục nào</td></tr>
                     {% endfor %}
                 </tbody>
             </table>
         </section>
 
         <section id="orders-section" class="custom-section">
-            <h2>Orders</h2>
+        <h2 style="font-family:'Poppins',sans-serif; font-weight:600; margin-bottom:15px;">Danh sách đơn hàng</h2>
 
+    <style>
+        /* Container table chung */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-family: "Poppins", sans-serif;
+            font-size: 14px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        /* Head */
+        th {
+            background-color: #f6f7fb;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 1px solid #ddd;
+            white-space: nowrap;
+        }
+
+        /* Cells */
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+
+        /* Avatar images */
+        img.avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .btn-edit, .btn-delete, .btn-add, .btn-detail {
+            border: none;
+            border-radius: 5px;
+            padding: 6px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-add { background-color:#2196F3; color:#fff; }
+        .btn-edit { background-color:#ffc107; color:#333; }
+        .btn-delete { background-color:#dc3545; color:#fff; }
+        .btn-detail { background-color:#007bff; color:#fff; }
+
+        .btn-add:hover { background:#1976D2; }
+        .btn-edit:hover { background:#e0a800; }
+        .btn-delete:hover { background:#c82333; }
+        .btn-detail:hover { background:#0056b3; }
+
+
+        /* Responsive scroll khi zoom */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .order-products {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .order-products li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+            border-bottom: 1px solid #eee;
+            padding: 6px 0;
+            transition: background 0.2s;
+        }
+
+        .order-products li:last-child { border-bottom: none; }
+
+        .order-products .product-name { flex: 1; font-weight: 500; color: #333; overflow: hidden; text-overflow: ellipsis; }
+        .order-products .product-qty { color: #666; font-size: 13px; min-width: 60px; text-align: right; }
+        .order-products .product-price { color: #007bff; font-weight: 500; min-width: 80px; text-align: right; }
+
+        /* Delivery info */
+        .delivery-info {
+            background: #f0f4ff;
+            border-radius: 6px;
+            padding: 8px 10px;
+            line-height: 1.5;
+            font-size: 13px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .delivery-info div b { color:#222; min-width: 90px; display:inline-block; }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.4);
+            backdrop-filter: blur(2px);
+        }
+
+        .modal-content {
+            background: #fff;
+            margin: 6% auto;
+            padding: 25px;
+            border-radius: 10px;
+            max-width: 480px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .modal-content h3 { margin-top:0; color:#333; font-size:18px; font-weight:600; }
+        .modal-content p { margin:6px 0; font-size:14px; }
+
+        /* Dark mode compatibility */
+        body.dark-mode-variables table { background-color: #1e1f24; color: #eaeaea; border-color:#444; }
+        body.dark-mode-variables th { background-color:#2c2e35 !important; color:#fff !important; border-bottom:1px solid #444; }
+        body.dark-mode-variables td { color:#e5e5e5 !important; border-bottom:1px solid #333; }
+        
+        </style>
+
+
+        <table class="table-wrapper">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Người dùng</th>
+                <th>Tên Khách hàng</th>
+                <th>Địa chỉ</th>
+                <th>SĐT</th>
+                <th>Sản phẩm</th>
+                <th>Tổng tiền</th>
+                <th>Trạng thái</th>
+                <th>Giao hàng</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.user.username }}</td>
+                <td>{{ order.customer_name }}</td>
+                <td>{{ order.customer_address }}</td>
+                <td>{{ order.customer_phone }}</td>
+
+            <td>
             <style>
+                .table-wrapper {
+                    width: 100%;
+                    overflow-x: auto;     
+                }
+                    
+                .table-wrapper table {
+                    min-width: 1200px;   
+                }
                 .order-products {
                     list-style: none;
-                    margin: 0;
                     padding: 0;
+                    margin: 0;
                 }
 
                 .order-products li {
-                    display: grid;
-                    grid-template-columns: 1fr 110px 150px;
+                    display: flex;
+                    justify-content: space-between; /* căn đều hai bên */
                     align-items: center;
-                    margin-bottom: 4px;
-                    padding: 7px 11px;
-                    border-radius: 6px;
-                    font-size: 14px;
-                    font-family: "Poppins", sans-serif;
+                    gap: 10px;
+                    white-space: nowrap; /* không xuống dòng */
+                    border-bottom: 1px solid #eee;
+                    padding: 6px 0;
+                    transition: background 0.2s;
+                }
+
+                .order-products li:hover {
+                    background: #f9f9f9;
+                }
+
+                .order-products li:last-child {
+                    border-bottom: none;
+                }
+
+                .order-products .product-name {
+                    flex: 1;
+                    font-weight: 500;
                     color: #333;
-                    transition: 0.2s;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                 }
 
-
-
-                .order-products li span {
-                    white-space: nowrap;
+                .order-products .product-qty {
+                    color: #666;
+                    font-size: 13px;
+                    min-width: 60px;
+                    text-align: right;
                 }
+
+                .order-products .product-price {
+                    color: #007bff;
+                    font-weight: 500;
+                    min-width: 80px;
+                    text-align: right;
+                }
+                
             </style>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>User</th>
-                        <th>Customer Name</th>
-                        <th>Customer Address</th>
-                        <th>Customer Phone</th>
-                        <th>Products</th>
-                        <th>Total</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for order in orders %}
-                    <tr>
-                        <td>{{ order.id }}</td>
-                        <td>{{ order.user.username }}</td>
-                        <td>{{order.customer_name}}</td>
-                        <td>{{order.customer_address}}</td>
-                        <td style="white-space: nowrap">{{order.customer_phone}}</td>
-                        <td>
-                            <ul class="order-products">
-                                {% for detail in order.order_details.all %}
-                                <li>
-                                    <span>{{ detail.product.name }}</span>
-                                    <span>SL: {{ detail.quantity }}</span>
-                                    <span>Giá: {{ detail.price|intcomma }} VND</span>
-                                    
-                                </li>
-                                {% empty %}
-                                <li>Không có sản phẩm</li>
-                                {% endfor %}
-                            </ul>
-                        </td>
+            <ul class="order-products">
+                {% for detail in order.order_details.all %}
+                <li>
+                    <span class="product-name">{{ detail.product.name }}</span>
+                    <span class="product-qty">SL: {{ detail.quantity }}</span>
+                </li>
+                {% empty %}
+                <li>Không có sản phẩm</li>
+                {% endfor %}
+            </ul>
 
-                        <td>{{ order.total_price|intcomma }}</td>
-                        <td>{{ order.get_status_display }}</td>
-                    </tr>
-                    {% empty %}
-                    <tr><td colspan="5">No orders found</td></tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            </td>
+
+
+                <td>{{ order.total_price|intcomma }}đ</td>
+                <td style="white-space: nowrap;">{{ order.get_status_display }}</td>
+
+                <td>
+                <div style="white-space: nowrap;" class="delivery-info">
+                    <div ><b>Tình trạng:</b> {{ order.get_delivery_status_display }}</div>
+                    {% if order.shipper_name %}
+                    <div><b>Shipper:</b> {{ order.shipper_name }}</div>
+                    <div><b>SĐT:</b> {{ order.shipper_phone }}</div>
+                    {% endif %}
+                    {% if order.delivery_start %}
+                    <div><b>Bắt đầu:</b> {{ order.delivery_start|date:"d/m/Y H:i" }}</div>
+                    {% endif %}
+                    {% if order.delivery_end %}
+                    <div><b>Hoàn tất:</b> {{ order.delivery_end|date:"d/m/Y H:i" }}</div>
+                    {% endif %}
+                </div>
+                </td>
+            <td style="display: flex; align-items: center; gap: 5px; flex-wrap: nowrap;">
+                <button class="btn-detail"onclick="showOrderDetail({{ order.id }}, '{{ order.customer_name }}', '{{ order.customer_phone }}', '{{ order.customer_address }}', '{{ order.get_status_display }}', '{{ order.created_at|date:'d/m/Y H:i' }}', '{{ order.shipper_name|default:'' }}', '{{ order.shipper_phone|default:'' }}', '{{ order.delivery_start|date:'d/m/Y H:i' }}', '{{ order.delivery_end|date:'d/m/Y H:i' }}')">Xem</button>
+                <button class="btn-edit" onclick="editOrder('{{ order.id }}')">Sửa</button>
+                <button class="btn-delete" onclick="deleteOrder('{{ order.id }}')">Xóa</button>
+            </td>
+
+            </tr>
+            {% empty %}
+            <tr><td colspan="10" style="text-align:center;">Không có đơn hàng nào</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Modal -->
+        <div id="orderModal" class="modal">
+            <div class="modal-content">
+            <h3>Chi tiết đơn hàng</h3>
+            <div id="orderDetailBody"></div>
+            <button onclick="closeModal()" style="background:#6c757d; color:#fff; border:none; padding:8px 15px; border-radius:6px; cursor:pointer; margin-top:10px;">Đóng</button>
+            </div>
+        </div>
+
+        <script>
+            function showOrderDetail(id, customer, phone, address, status, created, shipper, shipperPhone, start, end) {
+            const html = `
+                <p><b>ID:</b> ${id}</p>
+                <p><b>Khách hàng:</b> ${customer}</p>
+                <p><b>SĐT:</b> ${phone}</p>
+                <p><b>Địa chỉ:</b> ${address}</p>
+                <p><b>Trạng thái:</b> ${status}</p>
+                <p><b>Ngày đặt:</b> ${created}</p>
+                <hr>
+                <p><b>Shipper:</b> ${shipper || 'Chưa có'}</p>
+                <p><b>SĐT Shipper:</b> ${shipperPhone || 'Chưa có'}</p>
+                <p><b>Thời gian giao :</b> ${start || 'Chưa có'}</p>
+                <p><b>Thời gian kết thúc giao:</b> ${end || 'Chưa có'}</p>`;
+            document.getElementById('orderDetailBody').innerHTML = html;
+            document.getElementById('orderModal').style.display = 'block';
+            }
+
+            function closeModal() {
+            document.getElementById('orderModal').style.display = 'none';
+            }
+
+            function editOrder(id) {
+            window.location.href = `/dashboard/orders/edit/${id}/`;
+            }
+
+            function deleteOrder(id) {
+                window.location.href = `/dashboard/orders/delete/${id}/`;
+            }
+
+            window.onclick = function (e) {
+            const modal = document.getElementById('orderModal');
+            if (e.target == modal) modal.style.display = 'none';
+            }
+        </script>
         </section>
+
+
 
 
         <section id="payments-section" class="custom-section">
             <h2>Payments</h2>
             <table>
-                <thead><tr><th>Order ID</th><th>Method</th><th>Status</th><th>Amount</th></tr></thead>
+                <thead><tr><th>ID Đơn hàng</th><th>Phương thức</th><th>Trạng thái thanh toán</th><th>Tổng tiền</th></tr></thead>
                 <tbody>
                     {% for payment in payments %}
                     <tr>
@@ -258,7 +497,7 @@
 
                     </tr>
                     {% empty %}
-                    <tr><td colspan="4">No payments found</td></tr>
+                    <tr><td colspan="4">Không tìm thấy thanh toán nào</td></tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -372,7 +611,7 @@
                 </datalist>
 
                 <select name="product_id" style="padding:6px; border-radius:6px; border:1px solid #ccc;">
-                    <option value="">-- Tất cả sản phẩm --</option>
+                    <option value="">Tất cả sản phẩm</option>
                     {% for p in products %}
                         <option value="{{ p.id }}" {% if request.GET.product_id == p.id|stringformat:"s" %}selected{% endif %}>
                             {{ p.name }}
@@ -391,7 +630,7 @@
 
 
             <table>
-                <thead><tr><th>Date</th><th>Product</th><th>Quantity</th><th>Total</th></tr></thead>
+                <thead><tr><th>Ngày</th><th>Product</th><th>Số lượng</th><th>Tổng tiền</th></tr></thead>
                 <tbody>
                     {% for rev in revenues %}
                     <tr>
@@ -401,7 +640,7 @@
                         <td>{{ rev.total|intcomma }} VND</td>
                     </tr>
                     {% empty %}
-                    <tr><td colspan="4">No revenues found</td></tr>
+                    <tr><td colspan="4">Không tìm thấy danh thu nào</td></tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -447,10 +686,7 @@
                 <span class="material-icons-sharp active">light_mode</span>
                 <span class="material-icons-sharp">dark_mode</span>
             </div>
-            <div class="profile">
-                <div class="info"><p>Hey, <b>Reza</b></p><small class="text-muted">Admin</small></div>
-                <div class="profile-photo"><img src="{% static 'dashboard/images/profile-1.jpg' %}"></div>
-            </div>
+
         </div>
     </div>
 

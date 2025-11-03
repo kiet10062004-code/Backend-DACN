@@ -73,19 +73,32 @@ class Order(models.Model):
         ('failed', 'Thất bại'),
     ]
 
+    DELIVERY_CHOICES = [
+        ('not_delivered', 'Chưa giao hàng'),
+        ('delivering', 'Đang giao hàng'),
+        ('delivered', 'Đã giao hàng'),
+    ]
+
     customer_name = models.CharField(max_length=100)
     customer_address = models.CharField(max_length=255)
     customer_phone = models.CharField(max_length=20)
     total_price = models.DecimalField(max_digits=12, decimal_places=0, default=0)
     payment_method = models.CharField(max_length=50, default='momo')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,null=True, blank=True)
+    delivery_status = models.CharField(max_length=20, choices=DELIVERY_CHOICES, default='not_delivered')
+    shipper_name = models.CharField(max_length=100, blank=True, null=True)
+    shipper_phone = models.CharField(max_length=20, blank=True, null=True)
+    delivery_start = models.DateTimeField(blank=True, null=True)
+    delivery_end = models.DateTimeField(blank=True, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
     class Meta:
         db_table = 'Order'
 
     def __str__(self):
-        return f"Đơn hàng #{self.id} - {self.customer_name} - {self.get_status_display()}"
+        return f"Đơn hàng #{self.id} - {self.customer_name} - {self.get_delivery_status_display()}"
+
 
 
 

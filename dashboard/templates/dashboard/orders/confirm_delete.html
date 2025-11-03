@@ -1,0 +1,14 @@
+{% extends "dashboard/base.html" %}
+{% load humanize %}
+{% block content %}
+<div class="container mt-5 text-center">
+    <h3>Bạn có chắc muốn xóa đơn hàng {{ order.id }} không?</h3>
+
+
+    <form method="post" class="mt-4">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">🗑️ Xóa</button>
+        <a href="{% url 'dashboard_home' %}" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>
+{% endblock %}

@@ -4,7 +4,7 @@ from django.db.models.functions import TruncDate
 User = get_user_model()
 from django.db.models import Sum
 from shop.models import Product, Category, Order, Payment, Order_Detail, Revenue,Order_Detail
-from .forms import UserForm,ProductForm,CategoryForm
+from .forms import UserForm,ProductForm,CategoryForm,OrderForm
 from django.db.models.functions import TruncDate, TruncMonth, TruncYear
 
 def dashboard_home(request):
@@ -167,3 +167,37 @@ def product_delete(request, pk):
         product.delete()
         return redirect('dashboard_home')
     return render(request, 'dashboard/products/confirm_delete.html', {'product': product})
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from shop.models import Order
+def edit_order(request, pk):
+    order = get_object_or_404(Order, pk=pk)
+    
+    if request.method == "POST":
+        form = OrderForm(request.POST, instance=order)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Đơn hàng đã được cập nhật thành công.")
+            return redirect("dashboard_home") 
+    else:
+        form = OrderForm(instance=order)
+
+    return render(request, "dashboard/orders/edit_order.html", {"form": form, "order": order})
+
+
+def delete_order(request, pk):
+    order = get_object_or_404(Order, pk=pk)
+    
+    if request.method == "POST":
+        order.delete()
+        messages.success(request, "Đơn hàng đã được xóa thành công.")
+        return redirect("dashboard_home")
+
+    return render(request, "dashboard/orders/confirm_delete.html", {"order": order})
+
+
+def order_detail(request, pk):
+    order = get_object_or_404(Order, pk=pk)
+    return render(request, 'dashboard/orders/order_detail.html', {'order': order})

@@ -623,3 +623,5 @@ def user_info(request):
         "email": user.email,
         "is_superuser": user.is_superuser,
     })
+
+

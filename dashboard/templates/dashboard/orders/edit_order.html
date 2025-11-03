@@ -1,0 +1,58 @@
+{% extends "dashboard/base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Chỉnh sửa đơn hàng #{{ order.id }}</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group mb-3">
+            <label>Tên khách hàng</label>
+            <input type="text" name="customer_name" value="{{ order.customer_name }}" class="form-control">
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Địa chỉ</label>
+            <input type="text" name="customer_address" value="{{ order.customer_address }}" class="form-control">
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Số điện thoại</label>
+            <input type="text" name="customer_phone" value="{{ order.customer_phone }}" class="form-control">
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Tình trạng giao hàng</label>
+            <select name="delivery_status" class="form-control">
+                {% for key, value in order.DELIVERY_CHOICES %}
+                <option value="{{ key }}" {% if order.delivery_status == key %}selected{% endif %}>{{ value }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Tên shipper</label>
+            <input type="text" name="shipper_name" value="{{ order.shipper_name|default:'' }}" class="form-control">
+        </div>
+
+        <div class="form-group mb-3">
+            <label>SĐT shipper</label>
+            <input type="text" name="shipper_phone" value="{{ order.shipper_phone|default:'' }}" class="form-control">
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Thời gian bắt đầu giao hàng</label>
+            <input type="datetime-local" name="delivery_start"
+                value="{{ order.delivery_start|date:'Y-m-d\TH:i' }}" class="form-control">
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Thời gian kết thúc giao hàng</label>
+            <input type="datetime-local" name="delivery_end"
+                value="{{ order.delivery_end|date:'Y-m-d\TH:i' }}" class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-success">💾 Lưu thay đổi</button>
+    <a href="{% url 'dashboard_home' %}" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>
+{% endblock %}
