@@ -43,13 +43,11 @@ function Products() {
     return c.parent === activeParent;
   });
 
-  // ✅ Chỉ sửa chỗ này: check stock trước khi add
   const addToCart = (product) => {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const existing = cart.find(item => item.id === product.id);
     const totalQuantity = existing ? existing.quantity + 1 : 1;
 
-    // Check stock
     if (totalQuantity > product.stock) {
       alert(`Chỉ còn ${product.stock} sản phẩm trong kho!`);
       return;
@@ -64,7 +62,6 @@ function Products() {
     alert(`Đã thêm "${product.name}" vào giỏ hàng!`);
   };
 
-  // Skeleton loader
   const ProductSkeleton = () => (
     <li style={{
       border: '1px solid #eee',
@@ -81,7 +78,6 @@ function Products() {
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh' }}>
-      {/* Sidebar danh mục */}
       <aside style={{ width: '220px', padding: '5px', borderRight: '1px solid #ddd' }}>
         <div>
           <h3 style={{background: '#DEC6C6', height:'30px',alignItems:"center",alignContent: "center", display: "flex", justifyContent:"center"}}>Danh mục sản phẩm</h3>
@@ -112,9 +108,7 @@ function Products() {
         </div>
       </aside>
 
-      {/* Main */}
       <main style={{ flex: 1, padding: '30px' }}>
-        {/* Danh mục con */}
         {childCategories.length > 0 && (
           <div style={{ marginBottom: '20px' }}>
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
@@ -138,7 +132,6 @@ function Products() {
           </div>
         )}
 
-        {/* Danh sách sản phẩm */}
         <ul style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
@@ -175,7 +168,7 @@ function Products() {
                 <Link to={`/product/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                   <h3 style={{ fontSize: '1rem', marginBottom: '6px' }}>{product.name}</h3>
                 </Link>
-
+                <p>Còn <span>{product.stock}</span> sản phẩm<br></br></p>
                 <p style={{ fontWeight: 'bold', color: '#d0021b' }}>
                   <span>{Number(product.price).toLocaleString('vi-VN')} VND</span>
                 </p>

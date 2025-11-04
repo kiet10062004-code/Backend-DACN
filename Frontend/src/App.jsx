@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
 import Layout from "./Layout";
 import Trangchu from "./Trangchu";
@@ -12,11 +12,34 @@ import Thanhtoan from "./Thanhtoan";
 import TraCuuDonHang from "./TraCuuDonHang";
 import Profile from "./Profile";
 import ProductDetail from "./ProductDetail";
+import axiosClient from "./AxiosClient";        
+import { ensureAccessToken } from "./auth";         
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(() => !!localStorage.getItem("access_token"));
   const [avatarUrl, setAvatarUrl] = useState(() => localStorage.getItem("avatar_url") || "");
   const [fullName, setFullName] = useState("");
+  useEffect(() => {
+    async function fetchProfile() {
+      const token = await ensureAccessToken();
+      if (!token) return;
+
+      try {
+        const res = await axiosClient.get("/api/profile/");
+        const fullName = `${res.data.first_name || ""} ${res.data.last_name || ""}`.trim();
+        setFullName(fullName);
+
+        if (res.data.avatar) {
+          setAvatarUrl(res.data.avatar);
+          localStorage.setItem("avatar_url", res.data.avatar);
+        }
+      } catch (error) {
+        console.log("Failed to load profile after login");
+      }
+  }
+
+    if (isLoggedIn) fetchProfile();  // <== thêm dòng này
+  }, [isLoggedIn]); // <== chạy khi isLoggedIn thay đổi
   const navigate = useNavigate();
 
   const handleLogout = () => {

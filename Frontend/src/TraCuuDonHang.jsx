@@ -61,7 +61,7 @@ function TraCuuDonHang() {
         />
         <button
           onClick={handleSearch}
-          style={{ padding: '8px 16px', background: "#007bff", color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+          style={{ padding: '8px 16px', background: "#79b4cdff", color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
         >
           Tra cứu
         </button>
@@ -94,7 +94,7 @@ function TraCuuDonHang() {
               <th style={{ padding: '10px', borderBottom: '1px solid #ccc' }}>Thanh toán</th>
               <th style={{ padding: '10px', borderBottom: '1px solid #ccc' }}>Ngày đặt</th>
               <th style={{ padding: '10px', borderBottom: '1px solid #ccc' }}>Tổng tiền</th>
-              <th style={{ padding: '10px', borderBottom: '1px solid #ccc' }}>Hành động</th>
+              <th style={{ padding: '10px', borderBottom: '1px solid #ccc' }}></th>
             </tr>
           </thead>
           <tbody>
@@ -115,7 +115,7 @@ function TraCuuDonHang() {
                 <td style={{ padding: '10px' }}>
                   <button
                     onClick={() => setSelectedOrder(order)}
-                    style={{ padding: '6px 12px', background: '#28a745', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                    style={{ padding: '6px 12px', background: '#bbaadfff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
                   >
                     Xem chi tiết
                   </button>
@@ -145,10 +145,10 @@ function TraCuuDonHang() {
             <p><b>Shipper:</b> {selectedOrder.shipper_name || 'Chưa có'}</p>
             <p><b>SĐT Shipper:</b> {selectedOrder.shipper_phone || 'Chưa có'}</p>
             <p><b>Thời gian giao:</b> {selectedOrder.delivery_start ? new Date(selectedOrder.delivery_start).toLocaleString() : 'Chưa có'}</p>
-            <p><b>Thời gian kết thúc giao:</b> {selectedOrder.delivery_end ? new Date(selectedOrder.delivery_end).toLocaleString() : 'Chưa có'}</p>
+            <p><b>Thời gian dự kiến giao xong:</b> {selectedOrder.delivery_end ? new Date(selectedOrder.delivery_end).toLocaleString() : 'Chưa có'}</p>
 
             <h4>Sản phẩm:</h4>
-            <ul>
+            <ul style={{ listStyle: 'none', paddingLeft: 0 }}>
               {selectedOrder.order_details && selectedOrder.order_details.length > 0 ? (
                 selectedOrder.order_details.map((item, idx) => (
                   <li key={idx}>

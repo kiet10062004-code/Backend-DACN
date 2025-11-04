@@ -325,7 +325,6 @@ def momo_ipn_callback(request):
         else:
             order.status = "failed"
             payment.payment_status = "failed"
-
         order.save()
         payment.save()
 
@@ -343,7 +342,7 @@ def momo_ipn_callback(request):
 def momo_return(request):
     result_code = request.GET.get("resultCode")
     momo_order_id = request.GET.get("orderId")
-
+    
     try:
         payment = Payment.objects.get(momo_order_id=momo_order_id)
         order = payment.order
@@ -357,7 +356,7 @@ def momo_return(request):
         else:
             order.status = "failed"
             payment.payment_status = "failed"
-
+            
         order.save()
         payment.save()
     except Payment.DoesNotExist:
@@ -416,7 +415,6 @@ class MomoReturnView(APIView):
         if result_code == "0":
             return redirect(f"http://localhost:5173/payment-result?status=success&order_id={order_id}")
         else:
-            # Nếu bị hủy hoặc thất 
             return redirect("http://localhost:5173/")
         
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -591,8 +589,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
 
-# views.py
-# views.py
 from django.http import JsonResponse
 from .models import User
 

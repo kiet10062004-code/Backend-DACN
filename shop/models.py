@@ -158,11 +158,8 @@ class Payment(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
     payment_method = models.CharField(max_length=50, default='momo')
-    payment_status = models.CharField(
-        max_length=20,
-        choices=Status.choices,   
-        default=Status.PENDING
-    )
+    payment_status = models.CharField(max_length=20,choices=Status.choices,default=Status.PENDING)
+    stock_deducted = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'Payment'
@@ -170,24 +167,39 @@ class Payment(models.Model):
     def save(self, *args, **kwargs):
         is_new = self.pk is None
         old_status = None
+
         if not is_new:
             old_status = Payment.objects.get(pk=self.pk).payment_status
 
         super().save(*args, **kwargs)
 
         if self.payment_status == self.Status.SUCCESS and old_status != self.Status.SUCCESS:
+
+            if not self.stock_deducted:
+                for item in self.order.order_details.all():
+                    product = item.product
+                    product.stock -= item.quantity
+                    product.save()
+
+                self.stock_deducted = True
+                super().save(update_fields=['stock_deducted'])
+
             self.order.status = 'paid'
             self.order.save()
+
             Revenue.update_revenue(self.order)
+
         elif self.payment_status == self.Status.CANCELLED:
             self.order.status = 'cancelled'
             self.order.save()
+
         elif self.payment_status == self.Status.FAILED:
             self.order.status = 'failed'
             self.order.save()
 
     def __str__(self):
         return f"Thanh toán {self.get_payment_status_display()} cho đơn #{self.order.id}"
+
 
 class Revenue(models.Model):
     date = models.DateField(default=date.today)
