@@ -1,8 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import AvatarDefault from './assets/Avatar.jpg';
+import axios from "axios";
 
 function Layout({ children, isLoggedIn, avatarUrl, fullName, handleLogout }) {
+
+  const [search, setSearch] = useState("");
+  const [suggestions, setSuggestions] = useState([]); 
+
+  const handleSearch = async (e) => {
+    const value = e.target.value;
+    setSearch(value);
+
+    if (value.trim() === "") {
+      setSuggestions([]);
+      return;
+    }
+
+    try {
+      const res = await axios.get(`http://localhost:8000/api/product/search/?q=${value}`);
+
+      console.log("API trả về:", res.data);
+
+      if (Array.isArray(res.data)) {
+        setSuggestions(res.data);
+      } else {
+        setSuggestions([]);
+      }
+    } catch (error) {
+      console.log("Search error:", error);
+    }
+  };
+
+
   return (
     <div style={{ width: '100%', minHeight: '100vh', overflowX: 'hidden' }}>
       <nav
@@ -22,20 +52,37 @@ function Layout({ children, isLoggedIn, avatarUrl, fullName, handleLogout }) {
           borderBottom: '1px solid #ddd',
         }}
       >
-        <div>
-          <Link to="/" style={{ marginRight: '15px', textDecoration: 'none', color: '#000' }}>
-            Trang chủ
-          </Link>
-          <Link to="/products" style={{ marginRight: '15px', textDecoration: 'none', color: '#000' }}>
-            Sản phẩm
-          </Link>
-          <Link to="/tra-cuu" style={{ marginRight: '15px', textDecoration: 'none', color: '#000' }}>
-            Tra cứu
-          </Link>
-          <Link to="/cart" style={{ marginRight: '15px', textDecoration: 'none', color: '#000' }}>
-            Giỏ hàng
-          </Link>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+        <Link to="/" style={{ textDecoration: 'none', color: '#000' }}>Trang chủ</Link>
+        <Link to="/products" style={{ textDecoration: 'none', color: '#000' }}>Sản phẩm</Link>
+        <Link to="/tra-cuu" style={{ textDecoration: 'none', color: '#000' }}>Tra cứu</Link>
+
+        {/* Giỏ hàng */}
+        <Link to="/cart" style={{ textDecoration: 'none', color: '#000', marginLeft: 'auto' }}>Giỏ hàng</Link>
+
+        {/* Tìm kiếm */}
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="Tìm sản phẩm..."
+            value={search}
+            onChange={handleSearch}
+            autoComplete="off"
+          />
+
+          {suggestions.length > 0 && (
+            <div className="suggestions">
+              {suggestions.map((item) => (
+                <Link to={`/product/${item.id}`} key={item.id} className="suggestion-item">
+                  <img src={`http://localhost:8000${item.image}`} alt={item.name} />
+                  <span>{item.name}</span>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
+      </div>
+
 
         <div>
           {!isLoggedIn ? (
@@ -49,7 +96,7 @@ function Layout({ children, isLoggedIn, avatarUrl, fullName, handleLogout }) {
             </>
           ) : (
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              {/* Hiển thị Họ + Tên bên trái avatar */}
+
               {fullName && (
                 <span style={{ fontWeight: 'bold', marginRight: '8px' }}>
                   {fullName}

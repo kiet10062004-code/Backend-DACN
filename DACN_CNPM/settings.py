@@ -139,10 +139,8 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 
-# Media files (User uploads)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
@@ -157,7 +155,10 @@ AUTH_USER_MODEL = 'shop.User'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    "https://dztqh9dw-5173.asse.devtunnels.ms",   
 ]
+
+
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",

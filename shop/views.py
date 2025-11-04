@@ -23,33 +23,72 @@ from rest_framework import status
 
 
 
+from rest_framework import viewsets
+from rest_framework.permissions import AllowAny
+from .models import Product, Category
+from .serializers import ProductSerializer
+
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [AllowAny]
 
     def get_queryset(self):
-        queryset = Product.objects.all()
+        queryset = Product.objects.filter(
+            status=Product.Status.ACTIVE,
+            stock__gt=0
+        )
 
-        # 👉 Lọc chỉ sản phẩm đang bán và còn hàng
-        queryset = queryset.filter(status=Product.Status.ACTIVE, stock__gt=0)
+        keyword = self.request.query_params.get("keyword")
+        if keyword:
+            queryset = queryset.filter(name__icontains=keyword)
 
-        category_id = self.request.query_params.get('category')
-        include_children = self.request.query_params.get('include_children')
+        category_id = self.request.query_params.get("category")
+        include_children = self.request.query_params.get("include_children")
 
         if category_id:
             try:
                 category_id = int(category_id)
-                if include_children == 'true':
+
+                if include_children == "true":
                     child_ids = Category.objects.filter(parent_id=category_id).values_list('id', flat=True)
-                    all_ids = [category_id] + list(child_ids)
-                    queryset = queryset.filter(category_id__in=all_ids)
+                    queryset = queryset.filter(category_id__in=[category_id, *child_ids])
                 else:
                     queryset = queryset.filter(category_id=category_id)
+
             except ValueError:
                 return queryset.none()
 
         return queryset
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .models import Product
+from .serializers import ProductSerializer
+
+from django.db.models import Q
+
+class ProductSearch(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        keyword = request.GET.get('q', '').strip()
+
+        if not keyword:
+            return Response([])
+
+        keywords = keyword.split()  
+        query = Q()
+        for word in keywords:
+            query &= Q(name__icontains=word) 
+
+        products = Product.objects.filter(
+            query,
+            status=Product.Status.ACTIVE,
+            stock__gt=0
+        )[:10]
+
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data)
+
 
 
 
@@ -92,8 +131,7 @@ from rest_framework.permissions import IsAuthenticated
 class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
     queryset = Order.objects.all()
-    # permission_classes = [IsAuthenticated]
-    permission_classes = [AllowAny]  # Cho public
+    permission_classes = [AllowAny]  
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -281,7 +319,7 @@ def momo_create_payment(request, order_id):
             headers={"Content-Type": "application/json"}
         )
         res_data = res.json()
-        print("📡 MoMo response:", res_data)
+        print("MoMo response:", res_data)
 
         payment, _ = Payment.objects.get_or_create(order=order)
         payment.payment_method = "MoMo ATM" if payment_type == "atm" else "MoMo QR"
@@ -297,7 +335,7 @@ def momo_create_payment(request, order_id):
         })
 
     except Exception as e:
-        print("❌ Lỗi khi gọi MoMo:", e)
+        print("Lỗi khi gọi MoMo:", e)
         return JsonResponse({"error": "Lỗi khi gọi API MoMo", "details": str(e)}, status=500)
 
 
@@ -308,33 +346,34 @@ def momo_create_payment(request, order_id):
 def momo_ipn_callback(request):
     try:
         data = json.loads(request.body.decode("utf-8"))
-        print("📩 IPN Callback:", data)
-
         result_code = str(data.get("resultCode"))
         momo_order_id = data.get("orderId")
 
         payment = Payment.objects.get(momo_order_id=momo_order_id)
-        order = payment.order
 
         if result_code == "0":
-            order.status = "paid"
-            payment.payment_status = "success"
+            # Thanh toán thành công → xử lý stock và doanh thu
+            payment.mark_as_success()
         elif result_code == "1006":
-            order.status = "cancelled"
             payment.payment_status = "cancelled"
+            payment.order.status = "cancelled"
+            payment.save()
+            payment.order.save()
         else:
-            order.status = "failed"
             payment.payment_status = "failed"
-        order.save()
-        payment.save()
+            payment.order.status = "failed"
+            payment.save()
+            payment.order.save()
 
         return JsonResponse({"message": "Cập nhật trạng thái thành công"})
 
     except Payment.DoesNotExist:
         return JsonResponse({"error": "Không tìm thấy Payment tương ứng"}, status=404)
     except Exception as e:
-        print(" Lỗi IPN:", e)
+        print("Lỗi IPN:", e)
         return JsonResponse({"error": str(e)}, status=400)
+
+
 
 
 @api_view(["GET"])
@@ -342,7 +381,7 @@ def momo_ipn_callback(request):
 def momo_return(request):
     result_code = request.GET.get("resultCode")
     momo_order_id = request.GET.get("orderId")
-    
+
     try:
         payment = Payment.objects.get(momo_order_id=momo_order_id)
         order = payment.order

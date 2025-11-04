@@ -8,7 +8,7 @@ function Products() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [activeParent, setActiveParent] = useState(null);
   const [loading, setLoading] = useState(true);
-
+    
   useEffect(() => {
     axios.get('http://127.0.0.1:8000/api/Category/')
       .then(res => {

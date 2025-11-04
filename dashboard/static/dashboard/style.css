@@ -402,7 +402,7 @@ main .recent-orders a{
     align-items: center;
     height: 1.6rem;
     width: 4.2rem;
-    position: fixed;     
+    position: absolute;  
     top: 80px;         
     left: 120px;  
     cursor: pointer;
@@ -675,7 +675,7 @@ main .recent-orders a{
     }
 
     .right-section .nav{
-        position: fixed;
+        position: relative;
         top: 0;
         left: 0;
         align-items: center;

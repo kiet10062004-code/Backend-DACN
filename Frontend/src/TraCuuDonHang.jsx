@@ -65,12 +65,7 @@ function TraCuuDonHang() {
         >
           Tra cứu
         </button>
-        <button
-          onClick={() => setDarkMode(!darkMode)}
-          style={{ padding: '8px 16px', background: darkMode ? "#333" : "#eee", color: darkMode ? "#fff" : "#333", border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-        >
-          {darkMode ? "Light Mode" : "Dark Mode"}
-        </button>
+
       </div>
 
       {loading && <p>Đang tìm kiếm...</p>}
@@ -144,8 +139,8 @@ function TraCuuDonHang() {
             <p><b>Trạng thái:</b> {DELIVERY_CHOICES[selectedOrder.delivery_status]}</p>
             <p><b>Shipper:</b> {selectedOrder.shipper_name || 'Chưa có'}</p>
             <p><b>SĐT Shipper:</b> {selectedOrder.shipper_phone || 'Chưa có'}</p>
-            <p><b>Thời gian giao:</b> {selectedOrder.delivery_start ? new Date(selectedOrder.delivery_start).toLocaleString() : 'Chưa có'}</p>
-            <p><b>Thời gian dự kiến giao xong:</b> {selectedOrder.delivery_end ? new Date(selectedOrder.delivery_end).toLocaleString() : 'Chưa có'}</p>
+            <p><b>Bắt đầu:</b> {selectedOrder.delivery_start ? new Date(selectedOrder.delivery_start).toLocaleString() : 'Chưa có'}</p>
+            <p><b>Kết thúc:</b> {selectedOrder.delivery_end ? new Date(selectedOrder.delivery_end).toLocaleString() : 'Chưa có'}</p>
 
             <h4>Sản phẩm:</h4>
             <ul style={{ listStyle: 'none', paddingLeft: 0 }}>

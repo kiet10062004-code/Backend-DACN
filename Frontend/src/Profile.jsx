@@ -13,7 +13,10 @@ export default function Profile({ setAvatarUrl, setFullName }) {
   useEffect(() => {
     async function fetchProfile() {
       const token = await ensureAccessToken();
-      if (!token) return (window.location.href = "/login");
+      if (!token) {
+        setLoading(false);
+        return; 
+      }
 
       try {
         const res = await axiosClient.get("/api/profile/");

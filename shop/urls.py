@@ -4,7 +4,7 @@ from .views import (
     ProductViewSet, CategoryViewSet, UserViewSet,CartViewSet, Cart_DetailViewSet, OrderViewSet, Order_DetailViewSet,PaymentViewSet, RevenueViewSet,LoginByUsernameOrEmail, RegisterByUsernameOrEmail,momo_create_payment, search_orders,request_password_reset,reset_password,check_user
 )
 from . import views  
-from .views import cancel_order
+from .views import cancel_order,ProductSearch
 from django.conf import settings
 from django.conf.urls.static import static
 from shop.views import MyTokenObtainPairView, ProfileView
@@ -41,5 +41,5 @@ urlpatterns = [
     path('api/verify-otp/', views.verify_otp, name='verify_otp'),
     path('api/check-user/', check_user, name='check_user'),  
     path('api/user/', views.user_info, name='user_info'),
-
+    path('api/product/search/', ProductSearch.as_view()),
 ]

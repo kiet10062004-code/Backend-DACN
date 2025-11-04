@@ -18,7 +18,6 @@ class UserSerializer(serializers.ModelSerializer):
             return request.build_absolute_uri(obj.avatar.url)
         return None
     def create(self, validated_data):
-        # dùng create_user để tự động hash mật khẩu
         user = User.objects.create_user(
             username=validated_data["username"],
             email=validated_data["email"],
@@ -26,7 +25,6 @@ class UserSerializer(serializers.ModelSerializer):
             first_name=validated_data.get("first_name", ""),
             last_name=validated_data.get("last_name", ""),
         )
-        # nếu bạn có field phone custom thì set thêm
         user.phone = validated_data.get("phone", "")
         user.save()
         return user

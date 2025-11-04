@@ -158,11 +158,14 @@ class Payment(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
     payment_method = models.CharField(max_length=50, default='momo')
-    payment_status = models.CharField(max_length=20,choices=Status.choices,default=Status.PENDING)
+    payment_status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
     stock_deducted = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'Payment'
+
+    def __str__(self):
+        return f"Thanh toán {self.get_payment_status_display()} cho đơn #{self.order.id}"
 
     def save(self, *args, **kwargs):
         is_new = self.pk is None
@@ -174,28 +177,34 @@ class Payment(models.Model):
         super().save(*args, **kwargs)
 
         if self.payment_status == self.Status.SUCCESS and old_status != self.Status.SUCCESS:
-
-            if not self.stock_deducted:
-                for item in self.order.order_details.all():
-                    product = item.product
-                    product.stock -= item.quantity
-                    product.save()
-
-                self.stock_deducted = True
-                super().save(update_fields=['stock_deducted'])
-
-            self.order.status = 'paid'
-            self.order.save()
-
-            Revenue.update_revenue(self.order)
+            self._process_success_payment()
 
         elif self.payment_status == self.Status.CANCELLED:
             self.order.status = 'cancelled'
             self.order.save()
-
         elif self.payment_status == self.Status.FAILED:
             self.order.status = 'failed'
             self.order.save()
+
+
+    def _process_success_payment(self):
+
+        if not self.stock_deducted:
+            self.order.status = 'paid'
+            self.order.save()
+            Revenue.update_revenue(self.order)
+            self.stock_deducted = True
+            super().save(update_fields=['stock_deducted'])
+
+
+
+
+    def mark_as_success(self):
+
+        if self.payment_status != self.Status.SUCCESS:
+            self.payment_status = self.Status.SUCCESS
+            self.save()  
+
 
     def __str__(self):
         return f"Thanh toán {self.get_payment_status_display()} cho đơn #{self.order.id}"
@@ -222,9 +231,6 @@ class Revenue(models.Model):
             for item in order.order_details.select_related('product'):
                 product = Product.objects.select_for_update().get(pk=item.product.pk)
 
-                if product.stock < item.quantity:
-                    raise ValueError(f"Sản phẩm {product.name} đã hết hàng")
-
                 obj, _ = cls.objects.get_or_create(
                     date=date.today(),
                     product=product,
@@ -235,9 +241,10 @@ class Revenue(models.Model):
                     total=F('total') + (item.price * item.quantity)
                 )
 
-                product.stock = F('stock') - item.quantity
-                product.sold = F('sold') + item.quantity
+                product.stock = product.stock - item.quantity
+                product.sold = product.sold + item.quantity
                 product.save()
+
 
 
 

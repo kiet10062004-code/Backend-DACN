@@ -38,8 +38,8 @@ function App() {
       }
   }
 
-    if (isLoggedIn) fetchProfile();  // <== thêm dòng này
-  }, [isLoggedIn]); // <== chạy khi isLoggedIn thay đổi
+    if (isLoggedIn) fetchProfile(); 
+  }, [isLoggedIn]); 
   const navigate = useNavigate();
 
   const handleLogout = () => {
