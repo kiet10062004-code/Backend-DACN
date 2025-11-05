@@ -2,21 +2,21 @@
 {% block content %}
 
 <div style="max-width: 500px; margin: 60px auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); font-family: 'Poppins', sans-serif; text-align:center;">
-  <h2 style="color:#d32f2f; font-weight:600;">🗑️ Delete Product</h2>
+  <h2 style="color:#black; font-weight:600;">Xóa sản phẩm</h2>
   <p style="margin: 15px 0 25px; color:#555; font-size:15px;">
-    Are you sure you want to delete product <strong>"{{ product.name }}"</strong>?<br>
+    Bạn có muốn xóa sản phẩm <strong>"{{ product.name }}"</strong>không ?<br>
   </p>
 
   <form method="POST" style="display:flex; justify-content:center; gap:14px;">
     {% csrf_token %}
     <button type="submit"
       style="background:#e53935; color:white; padding:10px 24px; border:none; border-radius:6px; cursor:pointer; font-weight:500; transition:0.3s;">
-      🗑️ Delete
+      Xóa
     </button>
 
     <a href="{% url 'dashboard_home' %}"
       style="background:#ccc; color:#333; padding:10px 24px; border-radius:6px; text-decoration:none; font-weight:500; transition:0.3s;">
-      ↩️ Cancel
+      Hủy
     </a>
   </form>
 </div>

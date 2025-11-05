@@ -1,58 +1,97 @@
 {% extends "dashboard/base.html" %}
 {% block content %}
-<div class="container mt-4">
-    <h2>Chỉnh sửa đơn hàng #{{ order.id }}</h2>
 
-    <form method="post">
-        {% csrf_token %}
-        <div class="form-group mb-3">
-            <label>Tên khách hàng</label>
-            <input type="text" name="customer_name" value="{{ order.customer_name }}" class="form-control">
-        </div>
+<div style="max-width: 500px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); font-family: 'Poppins', sans-serif;">
+  
+  <h2 style="text-align:center; margin-bottom: 25px; color:#333; font-weight:600;">
+    Chỉnh sửa đơn hàng
+  </h2>
 
-        <div class="form-group mb-3">
-            <label>Địa chỉ</label>
-            <input type="text" name="customer_address" value="{{ order.customer_address }}" class="form-control">
-        </div>
+  <form method="post" style="display:flex; flex-direction:column; gap:18px;">
+    {% csrf_token %}
+    
+    <div style="display:flex; flex-direction:column;">
+      <label style="font-weight:500; color:#444; margin-bottom:5px;">Tên khách hàng</label>
+      <input type="text" name="customer_name" value="{{ order.customer_name }}"
+             style="padding:10px; border:1px solid #ddd; border-radius:6px; font-size:14px; outline:none;">
+    </div>
 
-        <div class="form-group mb-3">
-            <label>Số điện thoại</label>
-            <input type="text" name="customer_phone" value="{{ order.customer_phone }}" class="form-control">
-        </div>
+    <div style="display:flex; flex-direction:column;">
+      <label style="font-weight:500; color:#444; margin-bottom:5px;">Địa chỉ</label>
+      <input type="text" name="customer_address" value="{{ order.customer_address }}"
+             style="padding:10px; border:1px solid #ddd; border-radius:6px; font-size:14px; outline:none;">
+    </div>
 
-        <div class="form-group mb-3">
-            <label>Tình trạng giao hàng</label>
-            <select name="delivery_status" class="form-control">
-                {% for key, value in order.DELIVERY_CHOICES %}
-                <option value="{{ key }}" {% if order.delivery_status == key %}selected{% endif %}>{{ value }}</option>
-                {% endfor %}
-            </select>
-        </div>
+    <div style="display:flex; flex-direction:column;">
+      <label style="font-weight:500; color:#444; margin-bottom:5px;">Số điện thoại</label>
+      <input type="text" name="customer_phone" value="{{ order.customer_phone }}"
+             style="padding:10px; border:1px solid #ddd; border-radius:6px; font-size:14px; outline:none;">
+    </div>
 
-        <div class="form-group mb-3">
-            <label>Tên shipper</label>
-            <input type="text" name="shipper_name" value="{{ order.shipper_name|default:'' }}" class="form-control">
-        </div>
+    <div style="display:flex; flex-direction:column;">
+      <label style="font-weight:500; color:#444; margin-bottom:5px;">Tình trạng giao hàng</label>
+      <select name="delivery_status" style="padding:10px; border:1px solid #ddd; border-radius:6px; outline:none;">
+        {% for key, value in order.DELIVERY_CHOICES %}
+          <option value="{{ key }}" {% if order.delivery_status == key %}selected{% endif %}>{{ value }}</option>
+        {% endfor %}
+      </select>
+    </div>
 
-        <div class="form-group mb-3">
-            <label>SĐT shipper</label>
-            <input type="text" name="shipper_phone" value="{{ order.shipper_phone|default:'' }}" class="form-control">
-        </div>
+    <div style="display:flex; flex-direction:column;">
+      <label style="font-weight:500; color:#444; margin-bottom:5px;">Tên shipper</label>
+      <input type="text" name="shipper_name" value="{{ order.shipper_name|default:'' }}"
+             style="padding:10px; border:1px solid #ddd; border-radius:6px; font-size:14px; outline:none;">
+    </div>
 
-        <div class="form-group mb-3">
-            <label>Thời gian bắt đầu giao hàng</label>
-            <input type="datetime-local" name="delivery_start"
-                value="{{ order.delivery_start|date:'Y-m-d\TH:i' }}" class="form-control">
-        </div>
+    <div style="display:flex; flex-direction:column;">
+      <label style="font-weight:500; color:#444; margin-bottom:5px;">SĐT shipper</label>
+      <input type="text" name="shipper_phone" value="{{ order.shipper_phone|default:'' }}"
+             style="padding:10px; border:1px solid #ddd; border-radius:6px; font-size:14px; outline:none;">
+    </div>
 
-        <div class="form-group mb-3">
-            <label>Thời gian kết thúc giao hàng</label>
-            <input type="datetime-local" name="delivery_end"
-                value="{{ order.delivery_end|date:'Y-m-d\TH:i' }}" class="form-control">
-        </div>
+    <div style="display:flex; flex-direction:column;">
+      <label style="font-weight:500; color:#444; margin-bottom:5px;">Thời gian bắt đầu giao hàng</label>
+      <input type="datetime-local" name="delivery_start" value="{{ order.delivery_start|date:'Y-m-d\TH:i' }}"
+             style="padding:10px; border:1px solid #ddd; border-radius:6px; font-size:14px; outline:none;">
+    </div>
 
-        <button type="submit" class="btn btn-success">💾 Lưu thay đổi</button>
-    <a href="{% url 'dashboard_home' %}" class="btn btn-secondary">Hủy</a>
-    </form>
+    <div style="display:flex; flex-direction:column;">
+      <label style="font-weight:500; color:#444; margin-bottom:5px;">Thời gian kết thúc giao hàng</label>
+      <input type="datetime-local" name="delivery_end" value="{{ order.delivery_end|date:'Y-m-d\TH:i' }}"
+             style="padding:10px; border:1px solid #ddd; border-radius:6px; font-size:14px; outline:none;">
+    </div>
+
+    <div style="display:flex; justify-content:center; gap:12px; margin-top:20px;">
+      <button type="submit"
+        style="background:#4CAF50; color:white; padding:10px 24px; border:none; border-radius:6px; cursor:pointer; font-weight:500; transition:0.3s;">
+        Lưu
+      </button>
+
+      <a href="{% url 'dashboard_home' %}"
+        style="background:#ccc; color:#333; padding:10px 24px; border-radius:6px; text-decoration:none; font-weight:500; transition:0.3s;">
+        Hủy
+      </a>
+    </div>
+  </form>
 </div>
+
+<style>
+  input, select {
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  input:focus, select:focus {
+    border-color: #6C9BCF;
+    box-shadow: 0 0 3px rgba(108, 155, 207, 0.5);
+  }
+
+  button:hover {
+    background:#43A047;
+  }
+
+  a:hover {
+    background:#bbb;
+  }
+</style>
+
 {% endblock %}

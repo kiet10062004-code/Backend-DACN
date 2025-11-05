@@ -4,7 +4,7 @@ import { ensureAccessToken } from "./auth";
 import { useNavigate } from "react-router-dom";
 
 export default function Profile({ setAvatarUrl, setFullName }) {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const [profile, setProfile] = useState({});
   const [avatarFile, setAvatarFile] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -17,7 +17,7 @@ export default function Profile({ setAvatarUrl, setFullName }) {
       const token = await ensureAccessToken();
       if (!token) {
         setLoading(false);
-        return; 
+        return;
       }
 
       try {
@@ -43,8 +43,8 @@ export default function Profile({ setAvatarUrl, setFullName }) {
       setMessage("Họ và Tên không được để trống.");
       return;
     }
-    setSaving(true);
 
+    setSaving(true);
     const formData = new FormData();
     formData.append("first_name", profile.first_name || "");
     formData.append("last_name", profile.last_name || "");
@@ -61,6 +61,7 @@ export default function Profile({ setAvatarUrl, setFullName }) {
 
       const fullName = `${res.data.first_name || ""} ${res.data.last_name || ""}`.trim();
       if (setFullName) setFullName(fullName);
+
       if (setAvatarUrl && res.data.avatar) {
         setAvatarUrl(res.data.avatar);
         localStorage.setItem("avatar_url", res.data.avatar);
@@ -104,100 +105,113 @@ export default function Profile({ setAvatarUrl, setFullName }) {
   return (
     <div
       style={{
-        width: "400px",
+        minHeight: "calc(100vh - 120px)", 
         display: "flex",
-        flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        border: "1px solid #ddd",
-        backgroundColor: "white",
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        borderRadius: "12px",
-        padding: "30px",
-        boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+        width: "100%",
+        padding: "20px",
       }}
     >
-      {message && (
-        <p style={{ color: message.includes("thành công") ? "green" : "red", marginBottom: 10 }}>
-          {message}
-        </p>
-      )}
-
-      <form
-        onSubmit={handleSubmit}
+      <div
         style={{
+          width: "400px",
           display: "flex",
           flexDirection: "column",
+          justifyContent: "center",
           alignItems: "center",
-          width: "100%",
+          border: "1px solid #ddd",
+          backgroundColor: "white",
+          borderRadius: "12px",
+          padding: "30px",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
         }}
       >
-        <img
-          src={preview || profile.avatar || "/media/avatars/default.jpg"}
-          width={120}
-          height={120}
-          style={{ borderRadius: "50%", marginBottom: 15, objectFit: "cover" }}
-          alt="avatar"
-        />
+        {message && (
+          <p style={{ color: message.includes("thành công") ? "green" : "red", marginBottom: 10 }}>
+            {message}
+          </p>
+        )}
 
-        <input
-          type="file"
-          onChange={(e) => onAvatarSelect(e.target.files[0])}
-          style={{ marginBottom: 15 }}
-        />
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            width: "100%",
+          }}
+        >
+          <img
+            src={preview || profile.avatar || "/media/avatars/default.jpg"}
+            width={120}
+            height={120}
+            style={{ borderRadius: "50%", marginBottom: 15, objectFit: "cover" }}
+            alt="avatar"
+          />
 
-        <input
-          style={inputStyle}
-          name="first_name"
-          placeholder="Họ"
-          value={profile.first_name || ""}
-          onChange={(e) => setProfile({ ...profile, first_name: e.target.value })}
-        />
+          <input type="file" onChange={(e) => onAvatarSelect(e.target.files[0])} style={{ marginBottom: 15 }} />
 
-        <input
-          style={inputStyle}
-          name="last_name"
-          placeholder="Tên"
-          value={profile.last_name || ""}
-          onChange={(e) => setProfile({ ...profile, last_name: e.target.value })}
-        />
+          <input
+            style={inputStyle}
+            name="first_name"
+            placeholder="Họ"
+            value={profile.first_name || ""}
+            onChange={(e) => setProfile({ ...profile, first_name: e.target.value })}
+          />
+
+          <input
+            style={inputStyle}
+            name="last_name"
+            placeholder="Tên"
+            value={profile.last_name || ""}
+            onChange={(e) => setProfile({ ...profile, last_name: e.target.value })}
+          />
 
           <input
             style={{ ...inputStyle, background: "#f5f5f5", cursor: "not-allowed" }}
             disabled
-            value={profile.phone || ""} 
+            value={profile.phone || ""}
           />
 
+          <input
+            style={{ ...inputStyle, background: "#f5f5f5", cursor: "not-allowed" }}
+            disabled
+            value={maskEmail(profile.email)}
+          />
 
-        <input
-          style={{ ...inputStyle, background: "#f5f5f5", cursor: "not-allowed" }}
-          disabled
-          value={maskEmail(profile.email)}
-        />
+          <button
+            type="submit"
+            disabled={saving}
+            style={{
+              marginTop: 20,
+              padding: "10px 20px",
+              backgroundColor: saving ? "#ccc" : "#007bff",
+              color: "white",
+              border: "none",
+              borderRadius: "6px",
+              cursor: saving ? "not-allowed" : "pointer",
+              width: "110%",
+              fontSize: "16px",
+              transition: "0.3s",
+            }}
+          >
+            {saving ? "Đang lưu..." : "Lưu thay đổi"}
+          </button>
 
-        <button
-          type="submit"
-          disabled={saving}
-          style={{
-            marginTop: 20,
-            padding: "10px 20px",
-            backgroundColor: saving ? "#ccc" : "#007bff",
-            color: "white",
-            border: "none",
-            borderRadius: "6px",
-            cursor: saving ? "not-allowed" : "pointer",
-            width: "110%",
-            fontSize: "16px",
-            transition: "0.3s",
-          }}
-        >
-          {saving ? "Đang lưu..." : "Lưu thay đổi"}
-        </button>
-                <div style={{ color: '#2196F3', cursor: 'pointer', fontSize: '0.9em' , paddingTop:'10px'}} onClick={() => navigate("/change-password")}>Đổi mật khẩu</div>
-      </form>
+          <div
+            style={{
+              color: "#2196F3",
+              cursor: "pointer",
+              fontSize: "0.9em",
+              paddingTop: "10px",
+            }}
+            onClick={() => navigate("/change-password")}
+          >
+            Đổi mật khẩu
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

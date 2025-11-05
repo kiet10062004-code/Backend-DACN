@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import AvatarDefault from './assets/Avatar.jpg';
 import axios from "axios";
+import { MdHome, MdStore, MdSearch, MdShoppingCart } from 'react-icons/md';
 
 function Layout({ children, isLoggedIn, avatarUrl, fullName, handleLogout }) {
 
@@ -34,7 +35,7 @@ function Layout({ children, isLoggedIn, avatarUrl, fullName, handleLogout }) {
 
 
   return (
-    <div style={{ width: '100%', minHeight: '100vh', overflowX: 'hidden' }}>
+<div style={{ width: '100%', minHeight: '100vh',display: 'flex',flexDirection: 'column',  overflowX: 'hidden' }}>
       <nav
         style={{
           position: 'fixed',
@@ -53,14 +54,34 @@ function Layout({ children, isLoggedIn, avatarUrl, fullName, handleLogout }) {
         }}
       >
       <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-        <Link to="/" style={{ textDecoration: 'none', color: '#000' }}>Trang chủ</Link>
-        <Link to="/products" style={{ textDecoration: 'none', color: '#000' }}>Sản phẩm</Link>
-        <Link to="/tra-cuu" style={{ textDecoration: 'none', color: '#000' }}>Tra cứu</Link>
+      
+        <Link to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+          <img
+            src="/More_len.png"
+            alt="Logo"
+            style={{ height: "46px", width: "46px", borderRadius: "6px", objectFit: "cover" }}
+          />
+        </Link>
+        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '5px', textDecoration: 'none', color: '#000' }}>
+          <MdHome size={20} />
+          Trang chủ
+        </Link>
 
-        {/* Giỏ hàng */}
-        <Link to="/cart" style={{ textDecoration: 'none', color: '#000', marginLeft: 'auto' }}>Giỏ hàng</Link>
+        <Link to="/products" style={{ display: 'flex', alignItems: 'center', gap: '5px', textDecoration: 'none', color: '#000' }}>
+          <MdStore size={20} />
+          Sản phẩm
+        </Link>
 
-        {/* Tìm kiếm */}
+        <Link to="/tra-cuu" style={{ display: 'flex', alignItems: 'center', gap: '5px', textDecoration: 'none', color: '#000' }}>
+          <MdSearch size={20} />
+          Tra cứu
+        </Link>
+
+        <Link to="/cart" style={{ display: 'flex', alignItems: 'center', gap: '5px', textDecoration: 'none', color: '#000', marginLeft: 'auto' }}>
+          <MdShoppingCart size={20} />
+          Giỏ hàng
+        </Link>
+
         <div className="search-container">
           <input
             type="text"
@@ -131,6 +152,7 @@ function Layout({ children, isLoggedIn, avatarUrl, fullName, handleLogout }) {
 
       <main
         style={{
+          flex :1,
           width: '100%',
           maxWidth: '1200px',
           margin: '0 auto',
@@ -140,6 +162,51 @@ function Layout({ children, isLoggedIn, avatarUrl, fullName, handleLogout }) {
       >
         {children}
       </main>
+      <footer className="footer">
+        <div className="footer-content">
+
+          <div className="footer-col">
+            <h3>Shop Len ABC</h3>
+            <p>Sản phẩm len cao cấp - mềm mại - an toàn cho sức khoẻ.</p>
+            <div className="social-links">
+              <a>FB</a><a>IG</a><a>YT</a>
+            </div>
+          </div>
+
+          <div className="footer-col">
+            <h4>Liên kết nhanh</h4>
+            <ul>
+              <li><a href="/">Trang chủ</a></li>
+              <li><a href="/products">Sản phẩm</a></li>
+              <li><a href="/about">Giới thiệu</a></li>
+              <li><a href="/contact">Liên hệ</a></li>
+            </ul>
+          </div>
+
+          <div className="footer-col">
+            <h4>Chính sách</h4>
+            <ul>
+              <li><a>Chính sách đổi trả</a></li>
+              <li><a>Chính sách bảo hành</a></li>
+              <li><a>Hướng dẫn mua hàng</a></li>
+              <li><a>FAQ</a></li>
+            </ul>
+          </div>
+
+          <div className="footer-col">
+            <h4>Đăng ký nhận tin</h4>
+            <form className="footer-form">
+              <input type="email" placeholder="Email của bạn..." />
+              <button>Gửi</button>
+            </form>
+          </div>
+
+        </div>
+
+        <div className="footer-bottom">
+          © 2025 Shop Len ABC — All rights reserved.
+        </div>
+      </footer>
     </div>
   );
 }

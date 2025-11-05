@@ -4,13 +4,12 @@
 <div style="max-width: 500px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); font-family: 'Poppins', sans-serif;">
   
   <h2 style="text-align:center; margin-bottom: 25px; color:#333; font-weight:600;">
-    {% if form.instance.pk %}✏️ Edit Category{% else %}➕ Add New Category{% endif %}
+    {% if form.instance.pk %}Sửa danh mục{% else %}Thêm danh mục{% endif %}
   </h2>
 
   <form method="POST" style="display:flex; flex-direction:column; gap:18px;">
     {% csrf_token %}
     
-    <!-- render field by field for more control -->
     {% for field in form %}
       <div style="display:flex; flex-direction:column;">
         <label style="font-weight:500; color:#444; margin-bottom:5px;">{{ field.label }}</label>
@@ -24,12 +23,12 @@
     <div style="display:flex; justify-content:center; gap:12px; margin-top:20px;">
       <button type="submit"
         style="background:#4CAF50; color:white; padding:10px 24px; border:none; border-radius:6px; cursor:pointer; font-weight:500; transition:0.3s;">
-        💾 Save
+        Lưu
       </button>
 
       <a href="{% url 'dashboard_home' %}"
         style="background:#ccc; color:#333; padding:10px 24px; border-radius:6px; text-decoration:none; font-weight:500; transition:0.3s;">
-        ✖ Cancel
+       Hủy
       </a>
     </div>
   </form>

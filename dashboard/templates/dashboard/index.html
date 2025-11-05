@@ -25,6 +25,91 @@
     body.dark-mode-variables h1,h2,h3,p,a { color: #f0f0f0 !important; }
     body.dark-mode-variables a:hover { color: #00b4d8 !important; }
     body.dark-mode-variables aside { background-color: #1a1b20 !important; }
+    #dashboard-section {
+        padding: 20px;
+        font-family: "Times New Roman", Times, serif;
+    }
+
+    #dashboard-section h1 {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .analyse {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 40px;
+    }
+
+    .card {
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        padding: 30px 40px;
+        text-align: center;
+        min-width: 180px;
+        flex: 1 1 200px;
+        transition: transform 0.2s;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card h3 {
+        font-size: 16px;
+        color: #555;
+        margin-bottom: 10px;
+    }
+
+    .card h1 {
+        font-size: 28px;
+        color: #111;
+    }
+
+    .new-users h2 {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .user-list {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .user {
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        padding: 15px;
+        text-align: center;
+        width: 150px;
+        font-family: "Times New Roman", Times, serif;
+
+    }
+
+    .user img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 10px;
+    }
+
+    .user h2 {
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+
+    .user p {
+        font-size: 12px;
+        color: #777;
+    }
+
 </style>
 </head>
 <body>
@@ -54,41 +139,49 @@
 
     <main>
 
-        <div id="dashboard-section">
-            <h1>Analytics</h1>
-            <div class="analyse">
-                <div class="sales">
-                    <div class="status">
-                        <div class="info"><h3>Total Sales</h3><h1>{{ total_sales|intcomma }} VND</h1></div>
-                        <div class="progresss"><svg><circle cx="38" cy="38" r="36"></circle></svg><div class="percentage"><p>+81%</p></div></div>
-                    </div>
-                </div>
-                <div class="visits">
-                    <div class="status">
-                        <div class="info"><h3>Site Visit</h3><h1>24,981</h1></div>
-                        <div class="progresss"><svg><circle cx="38" cy="38" r="36"></circle></svg><div class="percentage"><p>-48%</p></div></div>
-                    </div>
-                </div>
-                <div class="searches">
-                    <div class="status">
-                        <div class="info"><h3>Searches</h3><h1>14,147</h1></div>
-                        <div class="progresss"><svg><circle cx="38" cy="38" r="36"></circle></svg><div class="percentage"><p>+21%</p></div></div>
-                    </div>
+    <div id="dashboard-section">
+        <h1>Thống kê</h1>
+        <div class="analyse">
+            <div class="card sales">
+                <div class="info">
+                    <h3>Tổng doanh thu</h3>
+                    <h1>{{ total_sales|intcomma }} VND</h1>
                 </div>
             </div>
-            <div class="new-users">
-                <h2>New Users</h2>
-                <div class="user-list">
-                    {% for user in new_users %}
-                        <div class="user">
-                            {% if user.avatar %}<img src="{{ user.avatar.url }}" alt="{{ user.username }}">{% else %}<img src="{% static 'dashboard/images/profile-1.jpg' %}" alt="default avatar">{% endif %}
-                            <h2>{{ user.username }}</h2>
-                            <p>{{ user.date_joined|timesince }} ago</p>
-                        </div>
-                    {% endfor %}
+
+            <div class="card orders">
+                <div class="info">
+                    <h3>Đơn hàng</h3>
+                    <h1>{{ total_orders }}</h1>
+                </div>
+            </div>
+
+            <div class="card products">
+                <div class="info">
+                    <h3>Tổng sản phẩm</h3>
+                    <h1>{{ total_products }}</h1> 
                 </div>
             </div>
         </div>
+
+        <div class="new-users">
+            <h2>Người dùng mới</h2>
+            <div class="user-list">
+                {% for user in new_users %}
+                <div class="user">
+                    {% if user.avatar %}
+                    <img src="{{ user.avatar.url }}" alt="{{ user.username }}">
+                    {% else %}
+                    <img src="{% static 'dashboard/images/profile-1.jpg' %}" alt="default avatar">
+                    {% endif %}
+                    <h2>{{ user.username }}</h2>
+                    <p>{{ user.date_joined|timesince }} ago</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
 
         <section id="users-section" class="custom-section">
             <h2>Người dùng</h2>

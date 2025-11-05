@@ -12,14 +12,17 @@ import Thanhtoan from "./Thanhtoan";
 import TraCuuDonHang from "./TraCuuDonHang";
 import Profile from "./Profile";
 import ProductDetail from "./ProductDetail";
-import axiosClient from "./AxiosClient";        
-import { ensureAccessToken } from "./auth";         
+import axiosClient from "./AxiosClient";
+import { ensureAccessToken } from "./auth";
 import ChangePassword from "./ChangePassword";
 
 function App() {
+  const navigate = useNavigate();  // ✅ cần khai báo ở đây
+
   const [isLoggedIn, setIsLoggedIn] = useState(() => !!localStorage.getItem("access_token"));
   const [avatarUrl, setAvatarUrl] = useState(() => localStorage.getItem("avatar_url") || "");
   const [fullName, setFullName] = useState("");
+
   useEffect(() => {
     async function fetchProfile() {
       const token = await ensureAccessToken();
@@ -35,25 +38,32 @@ function App() {
           localStorage.setItem("avatar_url", res.data.avatar);
         }
       } catch (error) {
-        console.log("Failed to load profile after login");
+        console.log("Không thể tải profile");
       }
-  }
+    }
 
-    if (isLoggedIn) fetchProfile(); 
-  }, [isLoggedIn]); 
-  const navigate = useNavigate();
+    if (isLoggedIn) fetchProfile();
+  }, [isLoggedIn]);
 
   const handleLogout = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
     localStorage.removeItem("avatar_url");
+
     setIsLoggedIn(false);
     setAvatarUrl("");
     setFullName("");
+
+    navigate("/login");  
   };
 
   const LayoutRoute = ({ children }) => (
-    <Layout isLoggedIn={isLoggedIn} avatarUrl={avatarUrl} fullName={fullName} handleLogout={handleLogout}>
+    <Layout
+      isLoggedIn={isLoggedIn}
+      avatarUrl={avatarUrl}
+      fullName={fullName}
+      handleLogout={handleLogout}  
+    >
       {children}
     </Layout>
   );
@@ -66,12 +76,12 @@ function App() {
       <Route path="/cart" element={<LayoutRoute><Cart /></LayoutRoute>} />
       <Route path="/thanhtoan" element={<LayoutRoute><Thanhtoan /></LayoutRoute>} />
       <Route path="/tra-cuu" element={<LayoutRoute><TraCuuDonHang /></LayoutRoute>} />
-      <Route path="/register" element={<Dangky />}/>
-      <Route path="/profile" element={<LayoutRoute><Profile setFullName={setFullName} setAvatarUrl={setAvatarUrl} /></LayoutRoute>}/>
-      <Route path="/login" element={<Dangnhap setIsLoggedIn={setIsLoggedIn} goToForgotPassword={() => navigate("/forgot-password")} />} />
-      <Route path="/forgot-password" element={<ForgotPassword goToReset={(email, otp) => navigate(`/reset-password?email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`)} goBack={() => navigate("/login")} />} />
-      <Route path="/reset-password" element={<ResetPassword email={new URLSearchParams(window.location.search).get("email")} otp={new URLSearchParams(window.location.search).get("otp")} goBack={() => navigate("/login")} />} />
-      <Route path="/change-password"element={<LayoutRoute><ChangePassword /></LayoutRoute>}/>
+      <Route path="/register" element={<Dangky />} />
+      <Route path="/login" element={<Dangnhap setIsLoggedIn={setIsLoggedIn} />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/profile" element={<LayoutRoute><Profile setFullName={setFullName} setAvatarUrl={setAvatarUrl} /></LayoutRoute>} />
+      <Route path="/change-password" element={<LayoutRoute><ChangePassword /></LayoutRoute>} />
     </Routes>
   );
 }

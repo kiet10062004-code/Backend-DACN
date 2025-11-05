@@ -6,10 +6,12 @@ from django.db.models import Sum
 from shop.models import Product, Category, Order, Payment, Order_Detail, Revenue,Order_Detail
 from .forms import UserForm,ProductForm,CategoryForm,OrderForm
 from django.db.models.functions import TruncDate, TruncMonth, TruncYear
-
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from shop.models import Order
 def dashboard_home(request):
     users = User.objects.all()     
-    new_users = User.objects.order_by('-date_joined')[:4]
+    new_users = User.objects.order_by('-date_joined')[:6]
     products = Product.objects.all()    
     categories = Category.objects.all() 
     orders = Order.objects.all().order_by('id')
@@ -23,7 +25,9 @@ def dashboard_home(request):
     reset = request.GET.get('reset')
     section_target = request.GET.get('section', '')
     product_name = request.GET.get('product_name')  
+    total_orders = orders.count()
 
+    total_products = products.count()
     if reset:
         from django.urls import reverse
         return redirect(f"{reverse('dashboard_home')}?section={section_target}")
@@ -73,7 +77,9 @@ def dashboard_home(request):
         'total_sales': total_sales,
         'chart_labels': chart_labels,
         'chart_values': chart_values,
-        'section_target': section_target,
+        'section_target': section_target,\
+        "total_orders": total_orders,     
+        "total_products": total_products,
     }
 
     return render(request, 'dashboard/index.html', context)
@@ -169,9 +175,7 @@ def product_delete(request, pk):
     return render(request, 'dashboard/products/confirm_delete.html', {'product': product})
 
 
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib import messages
-from shop.models import Order
+
 def edit_order(request, pk):
     order = get_object_or_404(Order, pk=pk)
     
