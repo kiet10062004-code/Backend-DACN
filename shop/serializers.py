@@ -9,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["username", "email", "phone", "first_name", "last_name", "avatar"]
-        read_only_fields = ["username", "email"]  # không cho sửa username/email
+        read_only_fields = ["username", "email", "phone"]  
         extra_kwargs = {"password": {"write_only": True}}
 
     def get_avatar(self, obj):

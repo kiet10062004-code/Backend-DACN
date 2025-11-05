@@ -37,7 +37,7 @@ export default function ResetPassword({ email, otp, goBack }) {
         placeholder="Mật khẩu mới"
         value={newPassword}
         onChange={(e) => setNewPassword(e.target.value)}
-        style={{ width: "100%", padding: 12, marginBottom: 15, borderRadius: 8, border: "1px solid #ccc" }}
+        style={{ width: "90%", padding: 12, marginBottom: 15, borderRadius: 8, border: "1px solid #ccc" }}
       />
 
       <input
@@ -45,7 +45,7 @@ export default function ResetPassword({ email, otp, goBack }) {
         placeholder="Xác nhận mật khẩu mới"
         value={confirmPassword}
         onChange={(e) => setConfirmPassword(e.target.value)}
-        style={{ width: "100%", padding: 12, marginBottom: 15, borderRadius: 8, border: "1px solid #ccc" }}
+        style={{ width: "90%", padding: 12, marginBottom: 15, borderRadius: 8, border: "1px solid #ccc" }}
       />
 
       {error && <p style={{ color: "red", marginBottom: 10 }}>{error}</p>}

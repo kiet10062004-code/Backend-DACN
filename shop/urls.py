@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import (
-    ProductViewSet, CategoryViewSet, UserViewSet,CartViewSet, Cart_DetailViewSet, OrderViewSet, Order_DetailViewSet,PaymentViewSet, RevenueViewSet,LoginByUsernameOrEmail, RegisterByUsernameOrEmail,momo_create_payment, search_orders,request_password_reset,reset_password,check_user
+    ProductViewSet, CategoryViewSet, UserViewSet,CartViewSet, Cart_DetailViewSet, OrderViewSet, Order_DetailViewSet,PaymentViewSet, RevenueViewSet,LoginByUsernameOrEmail, RegisterByUsernameOrEmail,momo_create_payment, search_orders,request_password_reset,reset_password,check_user,ChangePasswordView
 )
 from . import views  
 from .views import cancel_order,ProductSearch
@@ -42,4 +42,6 @@ urlpatterns = [
     path('api/check-user/', check_user, name='check_user'),  
     path('api/user/', views.user_info, name='user_info'),
     path('api/product/search/', ProductSearch.as_view()),
+    path('api/change-password/', ChangePasswordView.as_view(), name='change_password'),
+
 ]

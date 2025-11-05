@@ -14,6 +14,7 @@ import Profile from "./Profile";
 import ProductDetail from "./ProductDetail";
 import axiosClient from "./AxiosClient";        
 import { ensureAccessToken } from "./auth";         
+import ChangePassword from "./ChangePassword";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(() => !!localStorage.getItem("access_token"));
@@ -70,6 +71,7 @@ function App() {
       <Route path="/login" element={<Dangnhap setIsLoggedIn={setIsLoggedIn} goToForgotPassword={() => navigate("/forgot-password")} />} />
       <Route path="/forgot-password" element={<ForgotPassword goToReset={(email, otp) => navigate(`/reset-password?email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`)} goBack={() => navigate("/login")} />} />
       <Route path="/reset-password" element={<ResetPassword email={new URLSearchParams(window.location.search).get("email")} otp={new URLSearchParams(window.location.search).get("otp")} goBack={() => navigate("/login")} />} />
+      <Route path="/change-password"element={<LayoutRoute><ChangePassword /></LayoutRoute>}/>
     </Routes>
   );
 }

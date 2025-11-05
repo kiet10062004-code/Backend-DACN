@@ -11,7 +11,6 @@ export default function ForgotPassword({ goToReset, goBack }) {
   const [otpSent, setOtpSent] = useState(false);
   const [countdown, setCountdown] = useState(0);
 
-  // Countdown timer
   useEffect(() => {
     if (countdown === 0) return;
 
@@ -28,7 +27,6 @@ export default function ForgotPassword({ goToReset, goBack }) {
     return () => clearInterval(timer);
   }, [countdown]);
 
-  // Gửi OTP
   const sendOTP = async () => {
     setMessage("");
     setError("");
@@ -42,8 +40,8 @@ export default function ForgotPassword({ goToReset, goBack }) {
       );
       setMessage(res.data.message);
       setOtpSent(true);
-      setOtp(""); // reset input OTP
-      setCountdown(60); // reset countdown
+      setOtp(""); 
+      setCountdown(60);
     } catch (err) {
       setError(err.response?.data?.error || "Có lỗi xảy ra");
     } finally {
@@ -51,7 +49,6 @@ export default function ForgotPassword({ goToReset, goBack }) {
     }
   };
 
-  // Xác thực OTP → chuyển sang ResetPassword
   const verifyOTP = async () => {
     if (!otp) return setError("Vui lòng nhập OTP");
     setLoading(true);

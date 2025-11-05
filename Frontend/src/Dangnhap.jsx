@@ -114,6 +114,8 @@ const handleSubmit = async (e) => {
 
       <div style={forgotStyle} onClick={goToForgotPassword}>Quên mật khẩu?</div>
         <div style={{ color: '#2196F3', cursor: 'pointer', fontSize: '0.9em' ,paddingTop:"10px"}} onClick={() => navigate("/register")}>Đăng ký tài khoản</div>
+  
+
     </form>
   );
 }

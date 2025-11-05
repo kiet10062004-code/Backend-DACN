@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axiosClient from "./AxiosClient";
 import { ensureAccessToken } from "./auth";
+import { useNavigate } from "react-router-dom";
 
 export default function Profile({ setAvatarUrl, setFullName }) {
+  const navigate = useNavigate(); 
   const [profile, setProfile] = useState({});
   const [avatarFile, setAvatarFile] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -37,6 +39,10 @@ export default function Profile({ setAvatarUrl, setFullName }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!profile.first_name?.trim() || !profile.last_name?.trim()) {
+      setMessage("Họ và Tên không được để trống.");
+      return;
+    }
     setSaving(true);
 
     const formData = new FormData();
@@ -159,13 +165,12 @@ export default function Profile({ setAvatarUrl, setFullName }) {
           onChange={(e) => setProfile({ ...profile, last_name: e.target.value })}
         />
 
-        <input
-          style={inputStyle}
-          name="phone"
-          placeholder="Số điện thoại"
-          value={profile.phone || ""}
-          onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
-        />
+          <input
+            style={{ ...inputStyle, background: "#f5f5f5", cursor: "not-allowed" }}
+            disabled
+            value={profile.phone || ""} 
+          />
+
 
         <input
           style={{ ...inputStyle, background: "#f5f5f5", cursor: "not-allowed" }}
@@ -191,6 +196,7 @@ export default function Profile({ setAvatarUrl, setFullName }) {
         >
           {saving ? "Đang lưu..." : "Lưu thay đổi"}
         </button>
+                <div style={{ color: '#2196F3', cursor: 'pointer', fontSize: '0.9em' , paddingTop:'10px'}} onClick={() => navigate("/change-password")}>Đổi mật khẩu</div>
       </form>
     </div>
   );

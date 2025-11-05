@@ -80,7 +80,9 @@ function Dangky() {
     if (!first_name) errors.first_name = 'Vui lòng nhập Tên!';
     if (!last_name) errors.last_name = 'Vui lòng nhập Họ!';
     if (!password) errors.password = 'Vui lòng nhập Mật khẩu!';
-
+    if (password && (password.length < 6 || password.length > 18)) {
+      errors.password = 'Mật khẩu phải từ 6 đến 18 ký tự!';
+    }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (email && !emailRegex.test(email)) errors.email = 'Email không hợp lệ';
 

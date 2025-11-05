@@ -352,7 +352,6 @@ def momo_ipn_callback(request):
         payment = Payment.objects.get(momo_order_id=momo_order_id)
 
         if result_code == "0":
-            # Thanh toán thành công → xử lý stock và doanh thu
             payment.mark_as_success()
         elif result_code == "1006":
             payment.payment_status = "cancelled"
@@ -660,3 +659,32 @@ def user_info(request):
     })
 
 
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import check_password
+
+User = get_user_model()
+
+class ChangePasswordView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        old_password = request.data.get('old_password')
+        new_password = request.data.get('new_password')
+
+        if not old_password or not new_password:
+            return Response({'detail': 'Cần nhập mật khẩu cũ và mới'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not user.check_password(old_password):
+            return Response({'detail': 'Mật khẩu cũ không đúng'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if len(new_password) < 6 or len(new_password) > 18:
+            return Response({'detail': 'Mật khẩu mới phải từ 6 đến 18 ký tự'}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.set_password(new_password)
+        user.save()
+        return Response({'detail': 'Đổi mật khẩu thành công'}, status=status.HTTP_200_OK)
