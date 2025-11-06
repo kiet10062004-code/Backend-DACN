@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-export default function ForgotPassword({ goToReset, goBack }) {
+export default function ForgotPassword({ goToReset }) {
+  const navigate = useNavigate();
+  const goBack = () => {
+  navigate("/login");
+};
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [message, setMessage] = useState("");

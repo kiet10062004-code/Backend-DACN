@@ -739,7 +739,7 @@ body.dark-mode-variables h2,
 body.dark-mode-variables h3,
 body.dark-mode-variables p,
 body.dark-mode-variables a {
-    color: #f0f0f0;
+    color: #f0f0f0; 
 }
 
 body.dark-mode-variables a:hover {

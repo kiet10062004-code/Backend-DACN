@@ -102,6 +102,17 @@ function ChangePassword() {
       <button type="submit" style={buttonStyle} disabled={loading}>
         {loading ? 'Đang xử lý...' : 'Đổi mật khẩu'}
       </button>
+       <div
+            style={{
+              color: "#2196F3",
+              cursor: "pointer",
+              fontSize: "0.9em",
+              paddingTop: "10px",
+            }}
+            onClick={() => navigate("/profile")}
+          >
+            Quay lại
+          </div>
     </form>
   );
 }

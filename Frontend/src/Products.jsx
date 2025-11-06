@@ -79,7 +79,7 @@ function Products() {
   return (
     <div style={{ display: 'flex', minHeight: '100vh' }}>
       <aside style={{ width: '220px', padding: '5px', borderRight: '1px solid #ddd' }}>
-        <div>
+        <div style={{position:'fixed'}}>
           <h3 style={{background: '#DEC6C6', height:'30px',alignItems:"center",alignContent: "center", display: "flex", justifyContent:"center"}}>Danh mục sản phẩm</h3>
           <ul style={{ listStyle: 'none', padding: 0 }}>
             {parentCategories.map(category => (
@@ -134,7 +134,7 @@ function Products() {
 
         <ul style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+          gridTemplateColumns: 'repeat(3, 1fr)', 
           gap: '24px',
           listStyle: 'none',
           padding: 0
@@ -145,13 +145,25 @@ function Products() {
             <p>Không có sản phẩm nào.</p>
           ) : (
             products.map(product => (
-              <li key={product.id} style={{
+            <li key={product.id}
+              style={{
                 border: '1px solid #ddd',
                 padding: '12px',
                 borderRadius: '8px',
                 background: '#fff',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.05)'
-              }}>
+                boxShadow: '0 2px 6px rgba(0,0,0,0.05)',
+                transition: 'transform 0.25s ease, box-shadow 0.25s ease',   
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-6px)";
+                e.currentTarget.style.boxShadow = "0 12px 22px rgba(0,0,0,0.12)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "0 2px 6px rgba(0,0,0,0.05)";
+              }}
+            >
+
                 <Link to={`/product/${product.id}`}>
                   <img
                     src={product.image}
@@ -166,7 +178,7 @@ function Products() {
                   />
                 </Link>
                 <Link to={`/product/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <h3 style={{ fontSize: '1rem', marginBottom: '6px' }}>{product.name}</h3>
+                  <h3 style={{ fontSize: '1rem', marginBottom: '6px' ,  whiteSpace: 'nowrap', overflow: 'hidden',textOverflow: 'ellipsis'}}>{product.name}</h3>
                 </Link>
                 <p>Còn <span>{product.stock}</span> sản phẩm<br></br></p>
                 <p style={{ fontWeight: 'bold', color: '#d0021b' }}>

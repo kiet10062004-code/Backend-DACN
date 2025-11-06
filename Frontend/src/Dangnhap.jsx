@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-function Dangnhap({ setIsLoggedIn, goToForgotPassword }) {
+function Dangnhap({ setIsLoggedIn}) {
   const [form, setForm] = useState({ username: '', password: '' });
   const [fieldErrors, setFieldErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
+    const goToForgotPassword = () => {
+    navigate("/forgot-password");        
+  };
   const containerStyle = {
     maxWidth: '400px',
     margin: '50px auto',

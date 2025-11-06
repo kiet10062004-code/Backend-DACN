@@ -30,48 +30,85 @@ function Home() {
       <img src="http://localhost:8000/media/products/image 37.png" alt="Banner" />
 
         <div className="banner-text">
-          <h1>Chào mừng đến với Shop Len ABC</h1>
-          <p>Chất lượng - Ấm áp - Sáng tạo</p>
+          <h1>Chào mừng đến với MoreLen</h1>
+          <p>THÊM LEN - THÊM VUI</p>
         </div>
       </section>
-
-      <section className="ads-box">
-        <h2>🔥 Khuyến mãi đặc biệt tháng này 🔥</h2>
-        <p>Mua 2 tặng 1 cho tất cả sản phẩm len cao cấp!</p>
+      <section className="image-gallery">
+        <img src="/image 37.png" alt="Ảnh 1" />
+        <img src="/image 32.png" alt="Ảnh 3" />
+      </section>
+      <section className="image-quangcao">
+        <img src="/image 35.png" alt="Ảnh 1" />
       </section>
 
-      <section className="section-container">
+      <section className="section-container best-product-container">
         <h2 className="section-title">Top sản phẩm bán chạy</h2>
 
         {loading ? (
           <p>Đang tải...</p>
         ) : (
-          <div className="product-grid">
-            {topProducts.map(product => (
-              <div key={product.id} className="product-card">
-                <Link to={`/product/${product.id}`}>
-                  <img src={product.image} alt={product.name} />
-                </Link>
-                <h3>{product.name}</h3>
-                <p className="product-price">{Number(product.price).toLocaleString("vi-VN")} VND</p>
-                <span className="product-sold">Đã bán: {product.sold}</span>
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
-
-      <section className="section-container category-container">
-        <h2 className="section-title">Danh mục sản phẩm</h2>
-        <div className="category-grid">
-          {categories.filter(cat => !cat.parent).map(cat => (
-            <div key={cat.id} className="category-card">
-              <img src={cat.image || "/images/category-placeholder.jpg"} alt={cat.name} />
-              <p>{cat.name}</p>
+          <>
+            <div className="product-grid">
+              {topProducts.map(product => (
+                <div key={product.id} className="product-card">
+                  <Link to={`/product/${product.id}`}>
+                    <img src={product.image} alt={product.name} />
+                  </Link>
+                  <h3>{product.name}</h3>
+                  <p className="product-price">{Number(product.price).toLocaleString("vi-VN")} VND</p>
+                </div>
+              ))}
             </div>
-          ))}
+
+        <div style={{ textAlign: "center", marginTop: "25px" }}>
+          <Link
+            to="/products"
+            style={{
+              display: "inline-block",
+              padding: "12px 28px",
+              background: "#5dd1f7ff",
+              color: "white",
+              fontWeight: "600",
+              borderRadius: "30px",
+              textDecoration: "none",
+              transition: "0.3s",
+            }}
+          >
+            Xem thêm sản phẩm
+          </Link>
+        </div>
+      </>
+    )}
+  </section>
+
+      <div className="banner-container">
+        <img src="/image 29.png" alt="Quảng cáo" className="banner-img" />
+      </div>
+
+      <section className="section-container category-container full-width">
+        <h2 className="section-title">Danh mục sản phẩm</h2>
+
+        <div className="category-grid">
+
+          <div className="category-card">
+            <img src="/handmade.jpg" alt="Handmade" />
+            <p>Sản phẩm thủ công</p>
+          </div>
+
+          <div className="category-card">
+            <img src="/len.jpg" alt="Len" />
+            <p>Len</p>
+          </div>
+
+          <div className="category-card">
+            <img src="/kimmoc.jpg" alt="Kim móc" />
+            <p>Kim móc</p>
+          </div>
+
         </div>
       </section>
+
 
       <section className="commit-section">
         <div>
@@ -83,15 +120,12 @@ function Home() {
           <p>Giao trong 48h toàn quốc</p>
         </div>
         <div>
-          <h3>📞 Hỗ trợ 24/7</h3>
-          <p>Luôn đồng hành cùng khách hàng</p>
+          <h3>💳 Giá cả hợp lý</h3>
+          <p>Vừa túi tiền khách hàng</p>
         </div>
       </section>
-
-
 
     </div>
   );
 }
-
 export default Home;

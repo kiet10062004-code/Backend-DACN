@@ -17,7 +17,7 @@ import { ensureAccessToken } from "./auth";
 import ChangePassword from "./ChangePassword";
 
 function App() {
-  const navigate = useNavigate();  // ✅ cần khai báo ở đây
+  const navigate = useNavigate();  
 
   const [isLoggedIn, setIsLoggedIn] = useState(() => !!localStorage.getItem("access_token"));
   const [avatarUrl, setAvatarUrl] = useState(() => localStorage.getItem("avatar_url") || "");
@@ -78,7 +78,7 @@ function App() {
       <Route path="/tra-cuu" element={<LayoutRoute><TraCuuDonHang /></LayoutRoute>} />
       <Route path="/register" element={<Dangky />} />
       <Route path="/login" element={<Dangnhap setIsLoggedIn={setIsLoggedIn} />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/forgot-password" element={<ForgotPassword goToReset={(email, otp) => navigate(`/reset-password?email=${email}&otp=${otp}`)} />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/profile" element={<LayoutRoute><Profile setFullName={setFullName} setAvatarUrl={setAvatarUrl} /></LayoutRoute>} />
       <Route path="/change-password" element={<LayoutRoute><ChangePassword /></LayoutRoute>} />

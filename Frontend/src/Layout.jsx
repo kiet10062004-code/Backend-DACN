@@ -166,10 +166,9 @@ function Layout({ children, isLoggedIn, avatarUrl, fullName, handleLogout }) {
         <div className="footer-content">
 
           <div className="footer-col">
-            <h3>Shop Len ABC</h3>
-            <p>Sản phẩm len cao cấp - mềm mại - an toàn cho sức khoẻ.</p>
+            <h3>Shop MoreLen</h3>
+            <p>THÊM LEN - THÊM VUI</p>
             <div className="social-links">
-              <a>FB</a><a>IG</a><a>YT</a>
             </div>
           </div>
 
@@ -183,7 +182,7 @@ function Layout({ children, isLoggedIn, avatarUrl, fullName, handleLogout }) {
             </ul>
           </div>
 
-          <div className="footer-col">
+          {/* <div className="footer-col">
             <h4>Chính sách</h4>
             <ul>
               <li><a>Chính sách đổi trả</a></li>
@@ -191,14 +190,11 @@ function Layout({ children, isLoggedIn, avatarUrl, fullName, handleLogout }) {
               <li><a>Hướng dẫn mua hàng</a></li>
               <li><a>FAQ</a></li>
             </ul>
-          </div>
+          </div> */}
 
           <div className="footer-col">
-            <h4>Đăng ký nhận tin</h4>
-            <form className="footer-form">
-              <input type="email" placeholder="Email của bạn..." />
-              <button>Gửi</button>
-            </form>
+            <h4>Thanh toán</h4>
+              <img src="/Logo-MoMo-Square.webp" style={{width:'40px', height:'40px',alignItems:'center',display:'flex',justifyContent:'center'}} />
           </div>
 
         </div>

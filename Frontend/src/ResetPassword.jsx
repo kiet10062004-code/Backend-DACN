@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-export default function ResetPassword({ email, otp, goBack }) {
+export default function ResetPassword({ email, otp}) {
+  const navigate = useNavigate();
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const goBack = () => navigate("/login");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -55,7 +58,9 @@ export default function ResetPassword({ email, otp, goBack }) {
         Đổi mật khẩu
       </button>
 
-      <div style={{ textAlign: "right", color: "#2196F3", cursor: "pointer" }} onClick={goBack}>Quay lại đăng nhập</div>
+      <div style={{ textAlign: "right", color: "#2196F3", cursor: "pointer" }}onClick={() => navigate("/login")}>
+        Quay lại đăng nhập
+      </div>
     </form>
   );
 }
