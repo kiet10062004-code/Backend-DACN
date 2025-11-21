@@ -200,7 +200,7 @@ function Layout({ children, isLoggedIn, avatarUrl, fullName, handleLogout }) {
         </div>
 
         <div className="footer-bottom">
-          © 2025 Shop Len ABC — All rights reserved.
+          © 2025 Shop More Len    
         </div>
       </footer>
     </div>

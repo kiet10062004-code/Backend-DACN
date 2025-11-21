@@ -15,7 +15,7 @@ import ProductDetail from "./ProductDetail";
 import axiosClient from "./AxiosClient";
 import { ensureAccessToken } from "./auth";
 import ChangePassword from "./ChangePassword";
-
+import Layout1 from "./Layout1";
 function App() {
   const navigate = useNavigate();  
 
@@ -76,8 +76,8 @@ function App() {
       <Route path="/cart" element={<LayoutRoute><Cart /></LayoutRoute>} />
       <Route path="/thanhtoan" element={<LayoutRoute><Thanhtoan /></LayoutRoute>} />
       <Route path="/tra-cuu" element={<LayoutRoute><TraCuuDonHang /></LayoutRoute>} />
-      <Route path="/register" element={<Dangky />} />
-      <Route path="/login" element={<Dangnhap setIsLoggedIn={setIsLoggedIn} />} />
+      <Route path="/register" element={<Layout1><Dangky /></Layout1>} />
+      <Route path="/login" element={<Layout1><Dangnhap setIsLoggedIn={setIsLoggedIn} /></Layout1>} />
       <Route path="/forgot-password" element={<ForgotPassword goToReset={(email, otp) => navigate(`/reset-password?email=${email}&otp=${otp}`)} />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/profile" element={<LayoutRoute><Profile setFullName={setFullName} setAvatarUrl={setAvatarUrl} /></LayoutRoute>} />

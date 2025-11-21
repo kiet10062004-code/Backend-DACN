@@ -47,11 +47,10 @@ INSTALLED_APPS = [
     'dashboard',
     'django.contrib.humanize',
 
-
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware', # cho phép gọi API
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

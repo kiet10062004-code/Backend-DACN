@@ -434,7 +434,7 @@ def search_orders(request):
 
     orders = Order.objects.filter(
         Q(user__phone=keyword) | Q(user__email=keyword)
-    )
+    ).order_by("id")
 
     serializer = OrderSerializer(orders, many=True)
     return Response(serializer.data)

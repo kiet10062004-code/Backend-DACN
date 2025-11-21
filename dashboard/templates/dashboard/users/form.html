@@ -3,7 +3,7 @@
 
 <div style="max-width: 600px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); font-family: 'Poppins', sans-serif;">
   <h2 style="text-align:center; margin-bottom: 25px; color:#333; font-weight:600;">
-    {% if form.instance.pk %}Sửa người dùng{% else %}Thêm người dùng{% endif %}
+    {% if form.instance.pk %}Sửa người dùng{% else %}{% endif %}
   </h2>
 
   <form method="POST" enctype="multipart/form-data" style="display:flex; flex-direction:column; gap:18px;">
