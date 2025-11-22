@@ -134,7 +134,14 @@
             <a href="#" data-target="payments-section"><span class="material-icons-sharp">payment</span><h3>Thanh toán</h3></a>
             <a href="#" data-target="revenues-section"><span class="material-icons-sharp">analytics</span><h3>Doanh thu</h3></a>
 
-            <a href="http://localhost:5173/login"><span class="material-icons-sharp">logout</span><h3>Đăng xuất</h3></a>
+            <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
+                {% csrf_token %}
+            </form>
+
+            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <span class="material-icons-sharp">logout</span>
+                <h3>Đăng xuất</h3>
+            </a>        
         </div>
     </aside>
 

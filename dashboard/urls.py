@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-
+from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('', views.dashboard_home, name='dashboard_home'),
 
@@ -19,4 +19,5 @@ urlpatterns = [
     path("orders/<int:pk>/", views.order_detail, name="order_detail"),
     path("orders/edit/<int:pk>/", views.edit_order, name="edit_order"),
     path("orders/delete/<int:pk>/", views.delete_order, name="delete_order"),
+    path('logout/', auth_views.LogoutView.as_view(next_page='http://localhost:5173/login?logout_success=true'), name='logout'),
 ]

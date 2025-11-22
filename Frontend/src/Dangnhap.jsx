@@ -1,15 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // 1. Thêm useEffect
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom'; // 2. Thêm useSearchParams
 
 function Dangnhap({ setIsLoggedIn}) {
   const [form, setForm] = useState({ username: '', password: '' });
   const [fieldErrors, setFieldErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-    const goToForgotPassword = () => {
+  
+  // 3. Khởi tạo hook để đọc URL
+  const [searchParams] = useSearchParams();
+
+  // --- 4. ĐOẠN CODE MỚI THÊM VÀO ---
+  useEffect(() => {
+    // Kiểm tra xem URL có chứa '?logout_success=true' không
+    const isLogout = searchParams.get('logout_success');
+
+    if (isLogout === 'true') {
+      // Xóa Token trong localStorage
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      localStorage.removeItem('user'); // Xóa thêm user info nếu có lưu
+
+      // Cập nhật trạng thái đăng nhập của React App về false
+      if (setIsLoggedIn) setIsLoggedIn(false);
+
+      // (Tùy chọn) Xóa cái đuôi ?logout_success=true trên thanh địa chỉ cho đẹp
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, [searchParams, setIsLoggedIn]);
+  // ----------------------------------
+
+  const goToForgotPassword = () => {
     navigate("/forgot-password");        
   };
+
   const containerStyle = {
     maxWidth: '400px',
     margin: '50px auto',
@@ -35,54 +60,54 @@ function Dangnhap({ setIsLoggedIn}) {
     return Object.keys(errors).length === 0;
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (!validateForm()) return;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
 
-  setLoading(true);
-  setFieldErrors({});
-  try {
-    const payload = {
-      username: form.username,
-      password: form.password
-    };
-    const res = await axios.post('http://127.0.0.1:8000/api/token/', payload);
+    setLoading(true);
+    setFieldErrors({});
+    try {
+      const payload = {
+        username: form.username,
+        password: form.password
+      };
+      const res = await axios.post('http://127.0.0.1:8000/api/token/', payload);
 
-    const access = res.data.access;
-    const refresh = res.data.refresh;
+      const access = res.data.access;
+      const refresh = res.data.refresh;
 
-    localStorage.setItem('access_token', access);
-    localStorage.setItem('refresh_token', refresh);
+      localStorage.setItem('access_token', access);
+      localStorage.setItem('refresh_token', refresh);
 
-    const userRes = await axios.get('http://127.0.0.1:8000/api/user/', {
-      headers: { Authorization: `Bearer ${access}` }
-    });
+      const userRes = await axios.get('http://127.0.0.1:8000/api/user/', {
+        headers: { Authorization: `Bearer ${access}` }
+      });
 
-    const user = userRes.data;
-    setIsLoggedIn(true);
+      const user = userRes.data;
+      setIsLoggedIn(true);
 
-    if (user.is_superuser) {
-      window.location.href = 'http://127.0.0.1:8000/dashboard/';
-    } else {
-      navigate('/'); 
-    }
-
-  } catch (err) {
-    if (err.response) {
-      if (err.response.status === 401 || err.response.status === 400) {
-        setFieldErrors({ password: 'Tên đăng nhập hoặc mật khẩu không đúng' });
+      if (user.is_superuser) {
+        window.location.href = 'http://127.0.0.1:8000/dashboard/';
       } else {
-        setFieldErrors({ password: `Lỗi từ server: ${err.response.status}` });
+        navigate('/'); 
       }
-    } else if (err.request) {
-      setFieldErrors({ username: 'Không thể kết nối tới server. Vui lòng thử lại sau.' });
-    } else {
-      setFieldErrors({ username: 'Có lỗi xảy ra. Vui lòng thử lại.' });
+
+    } catch (err) {
+      if (err.response) {
+        if (err.response.status === 401 || err.response.status === 400) {
+          setFieldErrors({ password: 'Tên đăng nhập hoặc mật khẩu không đúng' });
+        } else {
+          setFieldErrors({ password: `Lỗi từ server: ${err.response.status}` });
+        }
+      } else if (err.request) {
+        setFieldErrors({ username: 'Không thể kết nối tới server. Vui lòng thử lại sau.' });
+      } else {
+        setFieldErrors({ username: 'Có lỗi xảy ra. Vui lòng thử lại.' });
+      }
+    } finally {
+      setLoading(false);
     }
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
 
   return (
