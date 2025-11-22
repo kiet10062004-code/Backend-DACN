@@ -1,27 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom"; // thêm Link để click vào sản phẩm liên quan
+import { useParams, Link } from "react-router-dom"; 
 import axios from "axios";
 
 export default function ProductDetail() {
-  const { id } = useParams(); // id sản phẩm từ URL
+  const { id } = useParams(); 
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [relatedProducts, setRelatedProducts] = useState([]);
 
-  // Lấy thông tin sản phẩm
   useEffect(() => {
     axios.get(`http://127.0.0.1:8000/api/Product/${id}/`)
       .then(res => setProduct(res.data))
       .catch(err => console.error("Lỗi khi lấy sản phẩm", err));
   }, [id]);
 
-  // Lấy sản phẩm liên quan cùng danh mục
   useEffect(() => {
     if (!product) return;
     axios.get(`http://127.0.0.1:8000/api/Product/?category=${product.category.id}`)
       .then(res => {
         const data = Array.isArray(res.data) ? res.data : res.data.results || [];
-        // Loại bỏ sản phẩm hiện tại khỏi danh sách liên quan
         const related = data.filter(p => p.id !== product.id);
         setRelatedProducts(related);
       })
@@ -66,7 +63,6 @@ export default function ProductDetail() {
           </p>
           <p>{product.description}</p>
 
-            {/* Chỉnh số lượng */}
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             <button
               onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
@@ -86,7 +82,7 @@ export default function ProductDetail() {
             <input
               type="number"
               min="1"
-              max={product.stock} // ✅ Giới hạn theo tồn kho
+              max={product.stock} 
               value={quantity}
               onChange={(e) => {
                 const val = Number(e.target.value);
@@ -144,11 +140,10 @@ export default function ProductDetail() {
         </div>
       </div>
 
-      {/* Sản phẩm liên quan */}
       {relatedProducts.length > 0 && (
         <div style={{ marginTop: "50px" }}>
           <h2>Sản phẩm liên quan</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(190px, 1fr))", gap: "20px", marginTop: "20px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: "20px", marginTop: "20px" }}>
             {relatedProducts.map(p => (
               <div key={p.id} style={{ border: "1px solid black", padding: "10px", borderRadius: "6px", textAlign: "center",backgroundColor:'white' }}>
                 <Link to={`/product/${p.id}`} style={{ textDecoration: "none", color: "inherit" }}>

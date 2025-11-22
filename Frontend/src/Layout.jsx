@@ -177,20 +177,11 @@ function Layout({ children, isLoggedIn, avatarUrl, fullName, handleLogout }) {
             <ul>
               <li><a href="/">Trang chủ</a></li>
               <li><a href="/products">Sản phẩm</a></li>
-              <li><a href="/about">Giới thiệu</a></li>
-              <li><a href="/contact">Liên hệ</a></li>
+
             </ul>
           </div>
 
-          {/* <div className="footer-col">
-            <h4>Chính sách</h4>
-            <ul>
-              <li><a>Chính sách đổi trả</a></li>
-              <li><a>Chính sách bảo hành</a></li>
-              <li><a>Hướng dẫn mua hàng</a></li>
-              <li><a>FAQ</a></li>
-            </ul>
-          </div> */}
+
 
           <div className="footer-col">
             <h4>Thanh toán</h4>

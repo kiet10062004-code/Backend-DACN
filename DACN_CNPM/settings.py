@@ -41,8 +41,8 @@ INSTALLED_APPS = [
     'shop',    
     'admin_interface',
     'colorfield',
-    'corsheaders', #cho phép gọi API 
-    'rest_framework.authtoken', # đăng nhập
+    'corsheaders', 
+    'rest_framework.authtoken',
     'django_filters',
     'dashboard',
     'django.contrib.humanize',
@@ -90,8 +90,8 @@ DATABASES = {
         'NAME': 'DACN_DB',         # Tên database
         'USER': 'dacn_user',       # User bạn đã tạo
         'PASSWORD': '123456',      # Mật khẩu của user
-        'HOST': 'localhost',       # Chạy local
-        'PORT': '5432',            # Cổng mặc định PostgreSQL
+        'HOST': 'localhost',       
+        'PORT': '5432',            
     }
 }
 

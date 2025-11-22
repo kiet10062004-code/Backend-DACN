@@ -241,7 +241,6 @@ html, body, #root {
   width: 100%;
 }
 
-/* Card */
 .category-card img {
   width: 100%;
   height: 240px;
@@ -254,11 +253,10 @@ html, body, #root {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-  width: calc(100% + 12px); /* tăng chiều rộng để không bị hụt khi dịch */
-  margin-left: -25px;       /* ✅ dịch qua trái */
+  width: calc(100% + 12px); 
+  margin-left: -25px;       
 }
 
-/* ✅ Card danh mục */
 .category-card {
   text-align: center;
   cursor: pointer;
@@ -267,7 +265,7 @@ html, body, #root {
 
 .category-card img {
   width: 100%;
-  height: 240px; /* tăng chiều cao để nhìn đẹp hơn */
+  height: 240px; 
   object-fit: cover;
   border-radius: 12px;
 }
