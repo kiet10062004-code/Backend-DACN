@@ -1,6 +1,4 @@
-"""
-Django settings for DACN_CNPM project.
-"""
+
 from pathlib import Path
 # 1. NHẬP THƯ VIỆN CẦN THIẾT
 import os
@@ -15,20 +13,19 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # 2. CẤU HÌNH BẢO MẬT & DEBUG (QUAN TRỌNG)
 # Lấy SECRET_KEY từ biến môi trường (Render sẽ cung cấp)
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-4-dh1yccqxnvni_s)0yr@@@x&+4++hu8o8cf(yt&u1ys%%xp=') 
 
-# DEBUG BẮT BUỘC PHẢI TẮT KHI TRIỂN KHAI
+# DEBUG BẮT BUỘNG PHẢI TẮT KHI TRIỂN KHAI
 DEBUG = os.environ.get('DEBUG', 'False') == 'True' 
 
 # Thay thế bằng URL công khai sau khi deploy
 ALLOWED_HOSTS = [
     '.render.com', # Cho phép mọi subdomain của Render
-    'kiet10062004-backend-dacn.onrender.com', # Ví dụ URL Render của bạn
-    'kiet10062004-frontend-dacn.vercel.app', # Ví dụ URL Vercel của bạn
+    'backend-dacn-h8nw1.onrender.com', # URL chính thức của Backend Render
+    '.vercel.app', # Cho phép mọi subdomain của Vercel (RẤT QUAN TRỌNG CHO MÔI TRƯỜNG DEV)
     '127.0.0.1', # Giữ lại cho local
     'localhost' # Giữ lại cho local
 ]
@@ -37,8 +34,6 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
-    # Thêm Whitenoise vào đây nếu không có lỗi xung đột
-    # 'whitenoise.runserver_nostatic', 
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'shop',     
+    'shop',      
     'admin_interface',
     'colorfield',
     'corsheaders', 
@@ -54,13 +49,12 @@ INSTALLED_APPS = [
     'django_filters',
     'dashboard',
     'django.contrib.humanize',
-
 ]
 
 # 3. CẤU HÌNH MIDDLEWARE (WHITENOISE & CORS)
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # 🥇 THÊM WHITENOISE VÀO ĐÂY
+    'whitenoise.middleware.WhiteNoiseMiddleware', # 🥇 WHITENOISE
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware', # 🥈 CORS NÊN ĐẶT SAU SESSION VÀ WHITENOISE
     'django.middleware.common.CommonMiddleware',
@@ -83,7 +77,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                ],
+            ],
         },
     },
 ]
@@ -93,7 +87,6 @@ WSGI_APPLICATION = 'DACN_CNPM.wsgi.application'
 
 # 4. CẤU HÌNH DATABASE (SỬ DỤNG dj-database-url)
 # Render sẽ cung cấp biến môi trường DATABASE_URL
-# Trong phần DATABASES:
 DATABASES = {
     'default': dj_database_url.config(
         default=os.environ.get('DATABASE_URL', 
@@ -135,29 +128,24 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 AUTH_USER_MODEL = 'shop.User' 
 
-# 6. CẤU HÌNH CORS (Thay thế bằng URL Vercel công khai)
+# 6. CẤU HÌNH CORS (Đã dọn dẹp và thêm URL Vercel mới nhất)
+# Cấu hình để chấp nhận mọi subdomain của Vercel (sử dụng .vercel.app trong ALLOWED_HOSTS)
+# và các domain cụ thể nếu cần.
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173", # Giữ lại cho local dev
-    "https://kiet10062004-frontend-dacn.vercel.app", # URL Vercel của bạn
-    "https://frontend-dacn-git-master-bins-projects-94f2b6ff.vercel.app",
-    "https://frontend-dacn.vercel.app",
-    # Thêm các URL khác nếu cần
-]
-CORS_ALLOW_CREDENTIALS = True
-# CẤU HÌNH CORS
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173", 
+    
+    # URL Vercel chính thức (tên project)
     "https://kiet10062004-frontend-dacn.vercel.app", 
     
-    # 🚨 THÊM URL MỚI NÀY:
+    # URL Vercel Preview mới nhất của bạn:
     "https://frontend-dacn-24jeoeums-bins-projects-94f2b6ff.vercel.app", 
-    
-    # URL cũ (giữ lại nếu cần)
+
+    # Các URL cũ khác (giữ lại nếu cần)
     "https://frontend-dacn-git-master-bins-projects-94f2b6ff.vercel.app", 
     "https://frontend-dacn.vercel.app",
-    
-    # Thêm URL chính thức (nếu có)
 ]
+CORS_ALLOW_CREDENTIALS = True
+
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -167,7 +155,7 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
     ),
 }
-from datetime import timedelta
+
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
