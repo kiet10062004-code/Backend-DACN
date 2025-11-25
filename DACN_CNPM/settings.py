@@ -137,6 +137,7 @@ CORS_ALLOWED_ORIGINS = [
     # URL Vercel chính thức (tên project)
     "https://kiet10062004-frontend-dacn.vercel.app", 
     
+    
     # URL Vercel Preview mới nhất của bạn:
     "https://frontend-dacn-24jeoeums-bins-projects-94f2b6ff.vercel.app", 
 
