@@ -93,6 +93,7 @@ WSGI_APPLICATION = 'DACN_CNPM.wsgi.application'
 
 # 4. CẤU HÌNH DATABASE (SỬ DỤNG dj-database-url)
 # Render sẽ cung cấp biến môi trường DATABASE_URL
+# Trong phần DATABASES:
 DATABASES = {
     'default': dj_database_url.config(
         default=os.environ.get('DATABASE_URL', 
@@ -101,6 +102,9 @@ DATABASES = {
         conn_health_checks=True,
     )
 }
+# 🚨 THÊM DÒNG NÀY ĐỂ BUỘC DÙNG POSTGRESQL NẾU KHÔNG CÓ DATABASE_URL HỢP LỆ
+if 'default' in DATABASES and not DATABASES['default'].get('ENGINE'):
+    DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'
 
 
 # Password validation
@@ -136,6 +140,7 @@ AUTH_USER_MODEL = 'shop.User'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173", # Giữ lại cho local dev
     "https://kiet10062004-frontend-dacn.vercel.app", # URL Vercel của bạn
+    "https://kiet10062004-frontend-dacn.vercel.app",
     # Thêm các URL khác nếu cần
 ]
 CORS_ALLOW_CREDENTIALS = True
