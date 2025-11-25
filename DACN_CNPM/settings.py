@@ -102,7 +102,6 @@ DATABASES = {
         conn_health_checks=True,
     )
 }
-# 🚨 THÊM DÒNG NÀY ĐỂ BUỘC DÙNG POSTGRESQL NẾU KHÔNG CÓ DATABASE_URL HỢP LỆ
 if 'default' in DATABASES and not DATABASES['default'].get('ENGINE'):
     DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'
 
@@ -145,7 +144,11 @@ CORS_ALLOWED_ORIGINS = [
     # Thêm các URL khác nếu cần
 ]
 CORS_ALLOW_CREDENTIALS = True
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://kiet10062004-frontend-dacn.vercel.app",
+    "https://frontend-dacn-git-master-bins-projects-94f2b6ff.vercel.app",
+    "https://frontend-dacn.vercel.app",
+]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
