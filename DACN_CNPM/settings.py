@@ -98,7 +98,7 @@ DATABASES = {
         default=os.environ.get('DATABASE_URL', 
             'postgres://dacn_user:123456@localhost:5432/DACN_DB'), 
         conn_max_age=600,
-        conn_health_check=True,
+        conn_health_checks=True,
     )
 }
 
