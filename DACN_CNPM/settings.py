@@ -144,10 +144,19 @@ CORS_ALLOWED_ORIGINS = [
     # Thêm các URL khác nếu cần
 ]
 CORS_ALLOW_CREDENTIALS = True
-CSRF_TRUSTED_ORIGINS = [
-    "https://kiet10062004-frontend-dacn.vercel.app",
-    "https://frontend-dacn-git-master-bins-projects-94f2b6ff.vercel.app",
+# CẤU HÌNH CORS
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173", 
+    "https://kiet10062004-frontend-dacn.vercel.app", 
+    
+    # 🚨 THÊM URL MỚI NÀY:
+    "https://frontend-dacn-24jeoeums-bins-projects-94f2b6ff.vercel.app", 
+    
+    # URL cũ (giữ lại nếu cần)
+    "https://frontend-dacn-git-master-bins-projects-94f2b6ff.vercel.app", 
     "https://frontend-dacn.vercel.app",
+    
+    # Thêm URL chính thức (nếu có)
 ]
 
 REST_FRAMEWORK = {
