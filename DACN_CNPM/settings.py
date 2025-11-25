@@ -132,20 +132,22 @@ AUTH_USER_MODEL = 'shop.User'
 # Cấu hình để chấp nhận mọi subdomain của Vercel (sử dụng .vercel.app trong ALLOWED_HOSTS)
 # và các domain cụ thể nếu cần.
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173", # Giữ lại cho local dev
-    
-    # URL Vercel chính thức (tên project)
-    "https://kiet10062004-frontend-dacn.vercel.app", 
-    
-    
-    # URL Vercel Preview mới nhất của bạn:
-    "https://frontend-dacn-24jeoeums-bins-projects-94f2b6ff.vercel.app", 
+    "http://localhost:5173",
 
-    # Các URL cũ khác (giữ lại nếu cần)
-    "https://frontend-dacn-git-master-bins-projects-94f2b6ff.vercel.app", 
     "https://frontend-dacn.vercel.app",
+    "https://frontend-dacn-bins-projects-94f2b6ff.vercel.app",
+    "https://frontend-dacn-git-master-bins-projects-94f2b6ff.vercel.app",
+    "https://frontend-dacn-24jeoeums-bins-projects-94f2b6ff.vercel.app",
 ]
+
 CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = [
+    "https://backend-dacn-hmw1.onrender.com",
+    "https://frontend-dacn.vercel.app",
+    "https://frontend-dacn-bins-projects-94f2b6ff.vercel.app",
+    "https://frontend-dacn-git-master-bins-projects-94f2b6ff.vercel.app",
+    "https://frontend-dacn-24jeoeums-bins-projects-94f2b6ff.vercel.app"
+]
 
 
 REST_FRAMEWORK = {
