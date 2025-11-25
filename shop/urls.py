@@ -23,25 +23,31 @@ router.register(r'Revenue', RevenueViewSet)
 
 
 urlpatterns = [
-    path('api/', include(router.urls)),
-    path('login/', LoginByUsernameOrEmail.as_view()),
-    path('register/', RegisterByUsernameOrEmail.as_view()),
-    path('momo/create/<int:order_id>/', momo_create_payment, name='momo_create_payment'),
-    path('api/momo/ipn/', views.momo_ipn_callback),
-    path('api/momo/return/', views.momo_return),  
-    path('api/order/<int:pk>/cancel/', cancel_order, name='cancel_order'),
-    path('api/orders/search/', search_orders, name='search_orders'),
+    # 1. Router: Bên ngoài có 'api/', ở đây rỗng '' -> Kết quả: /api/Category/
+    path('', include(router.urls)), 
+    
+    # 2. Login/Register: Kết quả sẽ là /api/login/ (Khớp với frontend)
+    path('login/', views.LoginByUsernameOrEmail.as_view()),
+    path('register/', views.RegisterByUsernameOrEmail.as_view()),
+    
+    # 3. Token: XÓA chữ 'api/' -> Kết quả: /api/token/
+    path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    
+    # 4. Các đường dẫn khác: XÓA chữ 'api/' ở đầu
+    path('momo/create/<int:order_id>/', views.momo_create_payment, name='momo_create_payment'),
+    path('momo/ipn/', views.momo_ipn_callback),
+    path('momo/return/', views.momo_return),  
+    path('order/<int:pk>/cancel/', views.cancel_order, name='cancel_order'),
+    path('orders/search/', views.search_orders, name='search_orders'),
     path('profile/', ProfileView.as_view(), name='profile'),
-    path('api/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/profile/', ProfileView.as_view(), name='profile'),
-    path("orders/<int:order_id>/", order_detail_api),
-    path('api/request-password-reset/', views.request_password_reset, name='request_password_reset'),
-    path('api/reset-password/', views.reset_password, name='reset_password'),
-    path('api/verify-otp/', views.verify_otp, name='verify_otp'),
-    path('api/check-user/', check_user, name='check_user'),  
-    path('api/user/', views.user_info, name='user_info'),
-    path('api/product/search/', ProductSearch.as_view()),
-    path('api/change-password/', ChangePasswordView.as_view(), name='change_password'),
-
+    
+    path("orders/<int:order_id>/", views.order_detail_api),
+    path('request-password-reset/', views.request_password_reset, name='request_password_reset'),
+    path('reset-password/', views.reset_password, name='reset_password'),
+    path('verify-otp/', views.verify_otp, name='verify_otp'),
+    path('check-user/', views.check_user, name='check_user'),  
+    path('user/', views.user_info, name='user_info'),
+    path('product/search/', views.ProductSearch.as_view()),
+    path('change-password/', views.ChangePasswordView.as_view(), name='change_password'),
 ]

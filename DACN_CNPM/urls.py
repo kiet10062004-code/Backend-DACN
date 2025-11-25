@@ -25,9 +25,12 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('shop.urls')),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    
+    # 🚨 QUAN TRỌNG: Thêm 'api/' vào đây
+    path('api/', include('shop.urls')), 
+    
+    # Xóa các dòng path('api/token'...) ở đây đi vì nó sẽ gây rối
+    # Chúng ta sẽ để shop/urls.py quản lý hết
     path('dashboard/', include('dashboard.urls')), 
 ]
 
