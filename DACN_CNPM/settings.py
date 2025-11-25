@@ -140,7 +140,7 @@ AUTH_USER_MODEL = 'shop.User'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173", # Giữ lại cho local dev
     "https://kiet10062004-frontend-dacn.vercel.app", # URL Vercel của bạn
-    "https://kiet10062004-frontend-dacn.vercel.app",
+    "https://frontend-dacn-git-master-bins-projects-94f2b6ff.vercel.app",
     # Thêm các URL khác nếu cần
 ]
 CORS_ALLOW_CREDENTIALS = True
