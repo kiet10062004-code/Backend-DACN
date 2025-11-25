@@ -1,0 +1,1 @@
+web: gunicorn DACN_CNPM.wsgi:application
