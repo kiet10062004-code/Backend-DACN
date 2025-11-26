@@ -151,10 +151,12 @@ SIMPLE_JWT = {
 # --- EMAIL CONFIGURATION (ĐÃ SỬA ĐỂ HOẠT ĐỘNG TRÊN RENDER) ---
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
-EMAIL_TIMEOUT = 120 # Tăng timeout để tránh lỗi Worker Timeout
+EMAIL_TIMEOUT = 120 
+
+# Cấu hình SMTPS (Implicit SSL)
+EMAIL_PORT = 465
+EMAIL_USE_TLS = False # Quan trọng: Phải là False khi dùng SSL
+EMAIL_USE_SSL = True  # Quan trọng: Phải là True khi dùng Port 465
 
 # ĐÃ SỬA: Sử dụng tên biến chuẩn EMAIL_HOST_USER và EMAIL_HOST_PASSWORD
 # Bạn cần đổi tên biến trên Render cho khớp với 2 dòng này
