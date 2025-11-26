@@ -23,7 +23,6 @@ router.register(r'Revenue', RevenueViewSet)
 
 
 urlpatterns = [
-urlpatterns = [
     # 1. TẤT CẢ CÁC ĐƯỜNG DẪN CUSTOM VÀ CỤ THỂ PHẢI ĐẶT TRƯỚC ROUTER
     
     # 1a. MoMo URLs: ĐÃ KHÔI PHỤC TIỀN TỐ 'momo/' ĐỂ KHỚP VỚI LỖI ĐỊNH TUYẾN KÉP
