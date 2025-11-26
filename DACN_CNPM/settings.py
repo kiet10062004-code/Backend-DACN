@@ -4,23 +4,26 @@ import dj_database_url
 from datetime import timedelta
 from dotenv import load_dotenv
 
+# Tải biến môi trường từ file .env (nếu chạy local)
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-temp')
+# --- SECRET KEY & DEBUG ---
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-temp-key')
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-# ================= ALLOWED HOSTS =================
+# --- ALLOWED HOSTS ---
 ALLOWED_HOSTS = [
     "*.vercel.app",
     "*.onrender.com",
-    "backend-dacn-h8nw1.onrender.com",
-    "backend-dacn-hmw1.onrender.com", 
+    "backend-dacn-h8nw1.onrender.com", # Host cũ
+    "backend-dacn-hmw1.onrender.com", # Host mới
     "127.0.0.1",
+    "localhost",
 ]
 
-# ================= INSTALLED APPS =================
+# --- INSTALLED APPS ---
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,16 +44,17 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
 ]
 
-# ================= MIDDLEWARE =================
+# --- MIDDLEWARE ---
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
-
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
-
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    
+    # ĐÃ SỬA: CsrfViewWrapper -> CsrfViewMiddleware
+    'django.middleware.csrf.CsrfViewMiddleware', 
+    
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -58,7 +62,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'DACN_CNPM.urls'
 
-# ================= TEMPLATES =================
+# --- TEMPLATES ---
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -77,38 +81,36 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'DACN_CNPM.wsgi.application'
 
-# ================= DATABASE =================
+# --- DATABASE ---
 DATABASES = {
     'default': dj_database_url.config(
+        # Ưu tiên đọc từ biến môi trường DATABASE_URL
         default=os.environ.get('DATABASE_URL', 'postgres://dacn_user:123456@localhost:5432/DACN_DB'),
         conn_max_age=600,
         conn_health_checks=True,
     )
 }
 
-if 'default' in DATABASES and not DATABASES['default'].get('ENGINE'):
-    DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'
-
-# ================= STATIC & MEDIA =================
+# --- STATIC & MEDIA ---
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-
-# ĐÃ SỬA: Đã thêm 'default' vào đây để Django có thể tìm thấy
-STORAGES = {
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-    "default": { # <-- Cấu hình media cho các ImageField
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
-}
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# ĐÃ SỬA: Cấu hình STORAGES phải nằm ở cấp cao nhất (root level)
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+}
+
 AUTH_USER_MODEL = 'shop.User'
 
-# ================== CORS CONFIG ==================
+# --- CORS CONFIG ---
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
@@ -116,21 +118,21 @@ CORS_ALLOWED_ORIGINS = [
     "https://frontend-dacn.vercel.app",
 ]
 
-# CHO PHÉP TOÀN BỘ SUBDOMAIN CỦA VERCEL
 CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^https:\/\/.*\.vercel\.app$",
 ]
 
-# ================== CSRF CONFIG ==================
+# --- CSRF CONFIG ---
 CSRF_TRUSTED_ORIGINS = [
     "https://*.vercel.app",
     "https://*.onrender.com",
     "https://backend-dacn-h8nw1.onrender.com",
+    "https://backend-dacn-hmw1.onrender.com",
 ]
 
 CORS_ALLOW_HEADERS = ['*']
 
-# ================== REST FRAMEWORK ==================
+# --- REST FRAMEWORK ---
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
@@ -138,7 +140,6 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.AllowAny",
     ),
-    # ĐÃ SỬA: Xóa 'default' bị đặt sai vị trí khỏi đây
 }
 
 SIMPLE_JWT = {
@@ -147,12 +148,22 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-# ================== EMAIL ==================
+# --- EMAIL CONFIGURATION (ĐÃ SỬA ĐỂ HOẠT ĐỘNG TRÊN RENDER) ---
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
+EMAIL_USE_SSL = False
+EMAIL_TIMEOUT = 120 # Tăng timeout để tránh lỗi Worker Timeout
+
+# ĐÃ SỬA: Sử dụng tên biến chuẩn EMAIL_HOST_USER và EMAIL_HOST_PASSWORD
+# Bạn cần đổi tên biến trên Render cho khớp với 2 dòng này
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
+# --- DEBUG PRINT (XÓA SAU KHI KIỂM TRA) ---
+# In ra log để kiểm tra xem biến đã được nạp chưa (không in password)
+print(f"DEBUG: EMAIL_HOST_USER = {EMAIL_HOST_USER}")
+print(f"DEBUG: EMAIL_HOST_PASSWORD is Set = {'Yes' if EMAIL_HOST_PASSWORD else 'No'}")
