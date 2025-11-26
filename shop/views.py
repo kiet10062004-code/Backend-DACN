@@ -403,11 +403,11 @@ def momo_return(request):
         print("Lỗi momo_return:", e)
 
     if result_code == "0":
-        return redirect("http://localhost:5173/")
+        return redirect("https://frontend-dacn.vercel.app/")
     elif result_code == "1006":
-        return redirect("http://localhost:5173/")
+        return redirect("https://frontend-dacn.vercel.app/")
     else:
-        return redirect("http://localhost:5173/")
+        return redirect("https://frontend-dacn.vercel.app/")
 
 @api_view(['POST'])
 def cancel_order(request, pk):
@@ -451,9 +451,9 @@ class MomoReturnView(APIView):
         order_id = request.query_params.get("orderId")
 
         if result_code == "0":
-            return redirect(f"http://localhost:5173/payment-result?status=success&order_id={order_id}")
+            return redirect(f"https://frontend-dacn.vercel.app/payment-result?status=success&order_id={order_id}")
         else:
-            return redirect("http://localhost:5173/")
+            return redirect("https://frontend-dacn.vercel.app/")
         
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.views import APIView

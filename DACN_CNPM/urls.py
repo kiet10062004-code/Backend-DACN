@@ -28,7 +28,7 @@ urlpatterns = [
     
     # 🚨 QUAN TRỌNG: Thêm 'api/' vào đây
     path('api/', include('shop.urls')), 
-    
+    path('momo/', include('shop.urls')), # <--- Dòng này đang BỊ LẶP lại trong CHÍNH file shop/urls.py!
     # Xóa các dòng path('api/token'...) ở đây đi vì nó sẽ gây rối
     # Chúng ta sẽ để shop/urls.py quản lý hết
     path('dashboard/', include('dashboard.urls')), 

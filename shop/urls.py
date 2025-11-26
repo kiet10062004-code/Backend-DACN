@@ -25,6 +25,7 @@ router.register(r'Revenue', RevenueViewSet)
 urlpatterns = [
     # 1. Router: Bên ngoài có 'api/', ở đây rỗng '' -> Kết quả: /api/Category/
     path('', include(router.urls)), 
+
     
     # 2. Login/Register: Kết quả sẽ là /api/login/ (Khớp với frontend)
     path('login/', views.LoginByUsernameOrEmail.as_view()),
