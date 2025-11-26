@@ -158,8 +158,8 @@ EMAIL_TIMEOUT = 120 # Tăng timeout để tránh lỗi Worker Timeout
 
 # ĐÃ SỬA: Sử dụng tên biến chuẩn EMAIL_HOST_USER và EMAIL_HOST_PASSWORD
 # Bạn cần đổi tên biến trên Render cho khớp với 2 dòng này
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
