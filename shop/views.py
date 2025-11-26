@@ -2,6 +2,7 @@ import uuid
 import hmac
 import hashlib
 import json
+from django.conf import settings
 import requests
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
@@ -593,6 +594,8 @@ User = get_user_model()
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def verify_otp(request):
+    print("EMAIL_USER:", settings.EMAIL_HOST_USER)
+    print("DEFAULT_FROM_EMAIL:", settings.DEFAULT_FROM_EMAIL)
     email = request.data.get('email')
     otp = request.data.get('otp')
 
@@ -688,3 +691,5 @@ class ChangePasswordView(APIView):
         user.set_password(new_password)
         user.save()
         return Response({'detail': 'Đổi mật khẩu thành công'}, status=status.HTTP_200_OK)
+    
+
