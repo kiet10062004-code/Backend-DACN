@@ -16,7 +16,7 @@ ALLOWED_HOSTS = [
     "*.vercel.app",
     "*.onrender.com",
     "backend-dacn-h8nw1.onrender.com",
-    "backend-dacn-hmw1.onrender.com",  
+    "backend-dacn-hmw1.onrender.com", 
     "127.0.0.1",
 ]
 
@@ -51,7 +51,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
 
-    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewWrapper',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -94,9 +94,13 @@ if 'default' in DATABASES and not DATABASES['default'].get('ENGINE'):
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+# ĐÃ SỬA: Đã thêm 'default' vào đây để Django có thể tìm thấy
 STORAGES = {
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+    "default": { # <-- Cấu hình media cho các ImageField
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
 }
 
@@ -135,6 +139,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.AllowAny",
     ),
+    # ĐÃ SỬA: Xóa 'default' bị đặt sai vị trí khỏi đây
 }
 
 SIMPLE_JWT = {
