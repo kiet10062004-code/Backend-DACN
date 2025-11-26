@@ -251,8 +251,8 @@ MOMO_ENDPOINT = "https://test-payment.momo.vn/v2/gateway/api/create"
 MOMO_PARTNER_CODE = "MOMO"
 MOMO_ACCESS_KEY = "F8BBA842ECF85"
 MOMO_SECRET_KEY = "K951B6PE1waDMi640xX08PD3vg6EkVlz"
-REDIRECT_URL = "https://backend-dacn-h8nw1.onrender.com/api/momo/return/"
-IPN_URL = "https://backend-dacn-h8nw1.onrender.com/api/momo/ipn/"
+REDIRECT_URL = "https://backend-dacn-hmw1.onrender.com/api/momo/return/"
+IPN_URL = "https://backend-dacn-hmw1.onrender.com/api/momo/ipn/"
 
 
 

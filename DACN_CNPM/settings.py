@@ -1,38 +1,26 @@
-
 from pathlib import Path
-# 1. NHẬP THƯ VIỆN CẦN THIẾT
 import os
-import dj_database_url # Thêm thư viện xử lý chuỗi kết nối DB
+import dj_database_url
 from datetime import timedelta
-from dotenv import load_dotenv # Thư viện đọc biến môi trường (.env)
+from dotenv import load_dotenv
 
-# Load biến môi trường từ file .env (chỉ cho môi trường local/Dev)
-load_dotenv() 
+load_dotenv()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Quick-start development settings - unsuitable for production
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-temp')
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-# 2. CẤU HÌNH BẢO MẬT & DEBUG (QUAN TRỌNG)
-# Lấy SECRET_KEY từ biến môi trường (Render sẽ cung cấp)
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-4-dh1yccqxnvni_s)0yr@@@x&+4++hu8o8cf(yt&u1ys%%xp=') 
-
-# DEBUG BẮT BUỘNG PHẢI TẮT KHI TRIỂN KHAI
-DEBUG = os.environ.get('DEBUG', 'False') == 'True' 
-
-# Thay thế bằng URL công khai sau khi deploy
+# ================= ALLOWED HOSTS =================
 ALLOWED_HOSTS = [
-    '.render.com', # Cho phép mọi subdomain của Render
-    'backend-dacn-h8nw1.onrender.com', # URL chính thức của Backend Render
-    '.vercel.app', # Cho phép mọi subdomain của Vercel (RẤT QUAN TRỌNG CHO MÔI TRƯỜNG DEV)
-    '127.0.0.1', # Giữ lại cho local
-    'localhost' # Giữ lại cho local
+    "*.vercel.app",
+    "*.onrender.com",
+    "backend-dacn-h8nw1.onrender.com",
+    "backend-dacn-hmw1.onrender.com",  
+    "127.0.0.1",
 ]
 
-
-# Application definition
-
+# ================= INSTALLED APPS =================
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -40,24 +28,29 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'rest_framework',
-    'shop',      
-    'admin_interface',
-    'colorfield',
-    'corsheaders', 
     'rest_framework.authtoken',
     'django_filters',
+
+    'shop',
     'dashboard',
+    'admin_interface',
+    'colorfield',
+    'corsheaders',
     'django.contrib.humanize',
 ]
 
-# 3. CẤU HÌNH MIDDLEWARE (WHITENOISE & CORS)
+# ================= MIDDLEWARE =================
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # 🥇 WHITENOISE
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware', # 🥈 CORS NÊN ĐẶT SAU SESSION VÀ WHITENOISE
     'django.middleware.common.CommonMiddleware',
+
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -66,6 +59,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'DACN_CNPM.urls'
 
+# ================= TEMPLATES =================
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -84,38 +78,22 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'DACN_CNPM.wsgi.application'
 
-
-# 4. CẤU HÌNH DATABASE (SỬ DỤNG dj-database-url)
-# Render sẽ cung cấp biến môi trường DATABASE_URL
+# ================= DATABASE =================
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL', 
-            'postgres://dacn_user:123456@localhost:5432/DACN_DB'), 
+        default=os.environ.get('DATABASE_URL', 'postgres://dacn_user:123456@localhost:5432/DACN_DB'),
         conn_max_age=600,
         conn_health_checks=True,
     )
 }
+
 if 'default' in DATABASES and not DATABASES['default'].get('ENGINE'):
     DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'
 
-
-# Password validation
-# (Giữ nguyên)
-
-# Internationalization
-# (Giữ nguyên)
-
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
-USE_I18N = True
-USE_TZ = True
-
-
-# 5. CẤU HÌNH STATIC & MEDIA FILES
+# ================= STATIC & MEDIA =================
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles' # Nơi Whitenoise sẽ phục vụ static files
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Bắt buộc cho Whitenoise trong Production
 STORAGES = {
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
@@ -125,37 +103,37 @@ STORAGES = {
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+AUTH_USER_MODEL = 'shop.User'
 
-AUTH_USER_MODEL = 'shop.User' 
+# ================== CORS CONFIG ==================
+CORS_ALLOW_CREDENTIALS = True
 
-# 6. CẤU HÌNH CORS (Đã dọn dẹp và thêm URL Vercel mới nhất)
-# Cấu hình để chấp nhận mọi subdomain của Vercel (sử dụng .vercel.app trong ALLOWED_HOSTS)
-# và các domain cụ thể nếu cần.
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
-
     "https://frontend-dacn.vercel.app",
-    "https://frontend-dacn-bins-projects-94f2b6ff.vercel.app",
-    "https://frontend-dacn-git-master-bins-projects-94f2b6ff.vercel.app",
-    "https://frontend-dacn-24jeoeums-bins-projects-94f2b6ff.vercel.app",
 ]
 
-CORS_ALLOW_CREDENTIALS = True
+# CHO PHÉP TOÀN BỘ SUBDOMAIN CỦA VERCEL
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https:\/\/.*\.vercel\.app$",
+]
+
+# ================== CSRF CONFIG ==================
 CSRF_TRUSTED_ORIGINS = [
-    "https://backend-dacn-hmw1.onrender.com",
-    "https://frontend-dacn.vercel.app",
-    "https://frontend-dacn-bins-projects-94f2b6ff.vercel.app",
-    "https://frontend-dacn-git-master-bins-projects-94f2b6ff.vercel.app",
-    "https://frontend-dacn-24jeoeums-bins-projects-94f2b6ff.vercel.app"
+    "https://*.vercel.app",
+    "https://*.onrender.com",
+    "https://backend-dacn-h8nw1.onrender.com",
 ]
 
+CORS_ALLOW_HEADERS = ['*']
 
+# ================== REST FRAMEWORK ==================
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": (
-        "rest_framework.permissions.IsAuthenticated",
+        "rest_framework.permissions.AllowAny",
     ),
 }
 
@@ -165,12 +143,11 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-# 7. CẤU HÌNH EMAIL (Sử dụng biến môi trường cho bảo mật)
+# ================== EMAIL ==================
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-# Lấy từ biến môi trường (Render sẽ cung cấp)
-EMAIL_HOST_USER = os.environ.get('EMAIL_USER', '1150080061@sv.hcmunre.edu.vn')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS', 'udfh dshm bjtu pjuj') 
+EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
