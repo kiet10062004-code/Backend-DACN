@@ -23,9 +23,7 @@ router.register(r'Revenue', RevenueViewSet)
 
 
 urlpatterns = [
-    # 1. TẤT CẢ CÁC ĐƯỜNG DẪN CUSTOM VÀ CỤ THỂ PHẢI ĐẶT TRƯỚC ROUTER
     
-    # 1a. MoMo URLs (Đã bỏ tiền tố 'momo/' - Khắc phục lỗi 404 trước đó)
     path('create/<int:order_id>/', views.momo_create_payment, name='momo_create_payment'), 
     path('ipn/', views.momo_ipn_callback, name='momo_ipn_callback'), 
     path('return/', views.momo_return, name='momo_return'), 
