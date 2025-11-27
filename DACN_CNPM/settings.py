@@ -147,26 +147,4 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
-
-# --- EMAIL CONFIGURATION (ĐÃ SỬA ĐỂ HOẠT ĐỘNG TRÊN RENDER) ---
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_TIMEOUT = 120 
-
-# Cấu hình SMTPS (Implicit SSL)
-# Thay đổi: Sử dụng Port 587 và TLS
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True  # Bật TLS
-EMAIL_USE_SSL = False # Tắt SSL (chỉ dùng một trong hai)
-
-# ĐÃ SỬA: Sử dụng tên biến chuẩn EMAIL_HOST_USER và EMAIL_HOST_PASSWORD
-# Bạn cần đổi tên biến trên Render cho khớp với 2 dòng này
-EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
-
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
-# --- DEBUG PRINT (XÓA SAU KHI KIỂM TRA) ---
-# In ra log để kiểm tra xem biến đã được nạp chưa (không in password)
-print(f"DEBUG: EMAIL_HOST_USER = {EMAIL_HOST_USER}")
-print(f"DEBUG: EMAIL_HOST_PASSWORD is Set = {'Yes' if EMAIL_HOST_PASSWORD else 'No'}")
+RESEND_API_KEY = os.getenv("RESEND_API_KEY")

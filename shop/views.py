@@ -505,13 +505,27 @@ def order_detail_api(request, order_id):
 
 
 import random
-from django.core.mail import send_mail
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from datetime import timedelta
 from .models import PasswordResetOTP
+import resend
+from django.conf import settings
+
+resend.api_key = settings.RESEND_API_KEY
+
+def send_mail(subject, message, from_email, recipient_list):
+    """Ghi đè send_mail để dùng Resend API."""
+    to_email = recipient_list[0]
+
+    resend.Emails.send({
+        "from": "YourApp <onboarding@resend.dev>",
+        "to": to_email,
+        "subject": subject,
+        "html": f"<p>{message}</p>",
+    })
 
 User = get_user_model()
 
@@ -536,7 +550,8 @@ def request_password_reset(request):
         subject="Mã OTP đặt lại mật khẩu",
         message=f"Mã OTP của bạn là {otp}. Hết hạn sau 10 phút.",
         from_email=None,  # lấy DEFAULT_FROM_EMAIL
-        recipient_list=[email]
+        # recipient_list=[email]
+        recipient_list=["kiet10062004@gmail.com"]
     )
 
     return Response({"message": "Mã OTP đã được gửi tới email của bạn"})
