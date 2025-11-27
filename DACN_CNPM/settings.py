@@ -154,9 +154,10 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_TIMEOUT = 120 
 
 # Cấu hình SMTPS (Implicit SSL)
-EMAIL_PORT = 465
-EMAIL_USE_TLS = False # Quan trọng: Phải là False khi dùng SSL
-EMAIL_USE_SSL = True  # Quan trọng: Phải là True khi dùng Port 465
+# Thay đổi: Sử dụng Port 587 và TLS
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True  # Bật TLS
+EMAIL_USE_SSL = False # Tắt SSL (chỉ dùng một trong hai)
 
 # ĐÃ SỬA: Sử dụng tên biến chuẩn EMAIL_HOST_USER và EMAIL_HOST_PASSWORD
 # Bạn cần đổi tên biến trên Render cho khớp với 2 dòng này
